@@ -17,7 +17,8 @@ from __future__ import annotations
 from typing import Optional
 
 from .growth_score import score_balance_sheet
-from .scoring import Dimension, ScoreResult, avg, get, grade, scale, score_with
+from .scoring import ScoreResult, avg, get, grade, scale, score_with
+from .dimension import Dimension
 
 
 def _multiple(x: Optional[float], bad: float, good: float) -> Optional[float]:
@@ -70,15 +71,14 @@ def score_analyst_upside(cfg) -> Optional[float]:
 
 
 DIMENSIONS = [
-    Dimension("Earnings", 0.25, score_earnings_multiple),
-    Dimension("Book/Sales", 0.15, score_book_and_sales),
-    Dimension("EV", 0.15, score_ev_multiple),
-    Dimension("FCF yield", 0.20, score_cash_yield),
-    Dimension("Safety", 0.10, score_balance_sheet),
-    Dimension("Quality", 0.10, score_value_trap_check),
-    Dimension("Upside", 0.05, score_analyst_upside),
+    Dimension("Earnings", score_earnings_multiple, 0.25),
+    Dimension("Book/Sales", score_book_and_sales, 0.15),
+    Dimension("EV", score_ev_multiple, 0.15),
+    Dimension("FCF yield", score_cash_yield, 0.20),
+    Dimension("Safety", score_balance_sheet, 0.10),
+    Dimension("Quality", score_value_trap_check, 0.10),
+    Dimension("Upside", score_analyst_upside, 0.05),
 ]
-
 
 # Very low multiples can outvote the quality check in a weighted average, so a
 # business that scores badly on quality is capped: cheap + failing is a trap, not value.

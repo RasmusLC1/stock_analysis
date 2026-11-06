@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from .scoring import Dimension, ScoreResult, avg, get, scale, score_with
+from .scoring import ScoreResult, avg, get, scale, score_with
+from .dimension import Dimension
 
 
 def score_profit_margins(cfg) -> Optional[float]:
@@ -29,11 +30,10 @@ def score_cash_conversion(cfg) -> Optional[float]:
 
 
 DIMENSIONS = [
-    Dimension("Margins", 0.35, score_profit_margins),
-    Dimension("Returns", 0.35, score_capital_efficiency),
-    Dimension("FCF Gen", 0.30, score_cash_conversion),
+    Dimension("Margins", score_profit_margins, 0.35),
+    Dimension("Returns", score_capital_efficiency, 0.35),
+    Dimension("FCF Gen", score_cash_conversion, 0.30),
 ]
-
 
 def score_quality(cfg) -> ScoreResult:
   return score_with("Quality", cfg, DIMENSIONS)

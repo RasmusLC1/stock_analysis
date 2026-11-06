@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from .scoring import Dimension, ScoreResult, avg, get, scale, score_with
+from .scoring import ScoreResult, avg, get, scale, score_with
+from .dimension import Dimension
 
 
 def score_leverage(cfg) -> Optional[float]:
@@ -31,9 +32,9 @@ def score_debt_coverage(cfg) -> Optional[float]:
 
 
 DIMENSIONS = [
-    Dimension("Leverage", 0.40, score_leverage),
-    Dimension("Liquidity", 0.40, score_liquidity),
-    Dimension("Cash Buffer", 0.20, score_debt_coverage),
+    Dimension("Leverage", score_leverage, 0.40),
+    Dimension("Liquidity", score_liquidity, 0.40),
+    Dimension("Cash Buffer", score_debt_coverage, 0.20),
 ]
 
 

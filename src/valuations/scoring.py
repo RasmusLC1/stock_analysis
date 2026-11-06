@@ -46,13 +46,6 @@ def grade(score: Optional[float]) -> str:
   return "F"
 
 
-@dataclass(frozen=True)
-class Dimension:
-  label: str  # short name shown in the GUI breakdown
-  weight: float
-  fn: Callable[[object], Optional[float]]
-
-
 @dataclass
 class ScoreResult:
   lens: str  # "Growth", "Value", ...

@@ -13,7 +13,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from .scoring import Dimension, ScoreResult, avg, get, scale, score_with
+from .scoring import ScoreResult, avg, get, scale, score_with
+from .dimension import Dimension
 
 
 def score_growth_rate(cfg) -> Optional[float]:
@@ -69,13 +70,13 @@ def score_growth_price(cfg) -> Optional[float]:
 
 
 DIMENSIONS = [
-    Dimension("Growth", 0.25, score_growth_rate),
-    Dimension("Consistency", 0.10, score_growth_consistency),
-    Dimension("Profit", 0.20, score_profitability),
-    Dimension("Returns", 0.15, score_returns),
-    Dimension("Cash", 0.15, score_cash_quality),
-    Dimension("Balance", 0.10, score_balance_sheet),
-    Dimension("Price", 0.05, score_growth_price),
+    Dimension("Growth", score_growth_rate, 0.25),
+    Dimension("Consistency", score_growth_consistency, 0.10),
+    Dimension("Profit", score_profitability, 0.20),
+    Dimension("Returns", score_returns, 0.15),
+    Dimension("Cash", score_cash_quality, 0.15),
+    Dimension("Balance", score_balance_sheet, 0.10),
+    Dimension("Price", score_growth_price, 0.05),
 ]
 
 
