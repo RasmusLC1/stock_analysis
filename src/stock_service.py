@@ -14,28 +14,13 @@ class StockService:
       raise ValueError( f"Could not retrieve valid data for ticker '{ticker_symbol}'.")
 
     info = StockService.validate_info(ticker)
-    print("Ticker:\t", ticker)
-    print("Info:\t", info)
 
     data: InfoConfig = ExtractInfo.extract_info(info, ticker_symbol)
 
     if not data:
       raise ValueError( f"Could not extract data '{ticker_symbol}'.")
 
-    return StockService.format_info(data)
-  
-  @staticmethod
-  def format_info(data):
-    return {
-        "symbol": data.ticker_symbol,
-        "name": data.name,
-        "sector": data.sector,
-        "industry": data.industry,
-        "currency": data.currency,
-        "price": data.price,
-        "market_cap": data.market_cap,
-        "pe_ratio": data.pe_ratio,
-    }
+    return data
 
   @staticmethod
   def validate_info(ticker):

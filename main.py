@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.gui import StockAppGUI
+from src.gui.gui import StockAppGUI
 
 
 def main():
