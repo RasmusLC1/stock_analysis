@@ -20,13 +20,14 @@ from src.stock_service import StockService
 from src.valuations.lenses import LENSES
 from src.valuations.average_score import average_score
 
+YEARS = 20
 
 def fetch_10yr_cagr(ticker: str) -> float | None:
     """Calculates the 10-year Compound Annual Growth Rate (CAGR) for a ticker."""
     try:
         stock = yf.Ticker(ticker)
         end_date = datetime.today()
-        start_date = end_date - timedelta(days=365 * 10)
+        start_date = end_date - timedelta(days=365 * YEARS)
         
         hist = stock.history(start=start_date, end=end_date)
         if hist.empty or len(hist) < 252 * 5:  # Require at least 5 years of active price history
@@ -78,7 +79,7 @@ def run_scored_backtest(tickers: list[str]) -> pd.DataFrame:
 
             results.append({
                 "Ticker": ticker,
-                "10Yr_CAGR_Pct": round(cagr * 100, 2),
+                f"{YEARS}Yr_CAGR_Pct": round(cagr * 100, 2),
                 "Composite_Score": round(comp_result.score, 2) if hasattr(comp_result, "score") else comp_result,
                 **{f"Score_{k}": round(v, 2) if v is not None else None for k, v in lens_scores.items()}
             })
@@ -106,7 +107,7 @@ if __name__ == "__main__":
         print(correlations)
         
         # Save output
-        df_results.to_csv("scored_valuation_backtest.csv", index=False)
+        df_results.to_csv("data/scored_valuation_backtest.csv", index=False)
         print("\nResults successfully saved to scored_valuation_backtest.csv")
     else:
         print("No valid data collected.")

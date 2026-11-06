@@ -7,9 +7,9 @@ from yfinance import Ticker
 # Central stock handling class
 class StockService:
   @staticmethod
-  def fetch_stock_summary(ticker_symbol: str) -> dict:
+  def fetch_stock_summary(ticker_symbol: str, period = "1d") -> dict:
     ticker_symbol = StockService._normalize_ticker(ticker_symbol)
-    ticker: Ticker = ApiFetch.fetch_stock_data(ticker_symbol)
+    ticker: Ticker = ApiFetch.fetch_stock_data(ticker_symbol, period)
 
     if not ticker:
       raise ValueError( f"Could not retrieve valid data for ticker '{ticker_symbol}'.")

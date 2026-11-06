@@ -58,23 +58,30 @@ class ScoreResult:
 
 
 def score_with(lens: str, cfg, dimensions: list[Dimension]) -> ScoreResult:
-  breakdown: dict[str, Optional[float]] = {}
-  used_weight = weighted_sum = 0.0
-  total_weight = sum(d.weight for d in dimensions)
+    breakdown: dict[str, Optional[float]] = {}
+    used_weight = weighted_sum = 0.0
+    total_weight = sum(abs(d.weight) for d in dimensions) # Sum of absolute weights
 
-  for d in dimensions:
-    s = d.fn(cfg)
-    breakdown[d.label] = None if s is None else round(s, 1)
-    if s is not None:
-      weighted_sum += s * d.weight
-      used_weight += d.weight
+    for d in dimensions:
+        s = d.fn(cfg)
+        breakdown[d.label] = None if s is None else round(s, 1)
+        if s is not None:
+            # Multiply by the raw weight (which can be negative)
+            weighted_sum += s * d.weight
+            # But track used_weight using absolute value to keep the denominator positive
+            used_weight += abs(d.weight)
 
-  final = weighted_sum / used_weight if used_weight else None
-  return ScoreResult(
-      lens=lens,
-      ticker=getattr(cfg, "ticker_symbol", "?"),
-      score=None if final is None else round(final, 1),
-      grade=grade(final),
-      coverage=round(used_weight / total_weight, 2) if total_weight else 0.0,
-      breakdown=breakdown,
-  )
+    final = weighted_sum / used_weight if used_weight else None
+    
+    # Clamp final score strictly between 0 and 100
+    if final is not None:
+        final = max(0.0, min(100.0, final))
+
+    return ScoreResult(
+        lens=lens,
+        ticker=getattr(cfg, "ticker_symbol", "?"),
+        score=None if final is None else round(final, 1),
+        grade=grade(final),
+        coverage=round(used_weight / total_weight, 2) if total_weight else 0.0,
+        breakdown=breakdown,
+    )

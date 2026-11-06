@@ -4,4 +4,5 @@ class LensKeys:
     VALUE = "Value"
     HEALTH = "Health"
     QUALITY = "Quality"
+    GARP = "Garp"
     AVERAGE = "Average"

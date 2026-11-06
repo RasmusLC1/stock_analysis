@@ -1,0 +1,6 @@
+Category,Top 10 Mean CAGR (%),Top 10 Median CAGR (%),Top Tickers
+Composite_Score,35.81,33.91,"PLTR, TXN, FNV, AVGO, TSM, LRCX, ASML.AS, MU, SCCO, NVDA"
+Score_Growth,35.81,33.91,"MU, TSM, AVGO, TXN, PLTR, ASML.AS, LRCX, NVDA, FNV, SCCO"
+Score_Value,5.64,9.02,"BBD, AA, PAGS, ITUB, YPF, SAN.MC, GGB, C, SHEL.L, SQM"
+Score_Health,23.54,18.26,"C, Roku, PDD, PLTR, ZM, GOOGL, PAAS, MUFG, TWLO, AMD"
+Score_Quality,24.3,19.58,"V, PLTR, ZTS, TXN, MA, MU, TSM, MS, NEM, ADBE"
