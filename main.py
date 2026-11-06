@@ -1,0 +1,13 @@
+import tkinter as tk
+from src.gui import StockAppGUI
+
+
+def main():
+  root = tk.Tk()
+  # Initialize the primary GUI window controller
+  app = StockAppGUI(root)
+  root.mainloop()
+
+
+if __name__ == "__main__":
+  main()
