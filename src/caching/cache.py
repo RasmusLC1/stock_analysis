@@ -6,10 +6,9 @@ import pickle
 from ..info.info_config import InfoConfig
 
 # Define local cache directory and database path relative to project root
-CACHE_DIR = Path(__file__).resolve().parent.parent / "data_cache"
+CACHE_DIR = Path(__file__).resolve().parent.parent.parent / "data_cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = CACHE_DIR / "stock_summaries.db"
-
 
 class Cache:
     @staticmethod

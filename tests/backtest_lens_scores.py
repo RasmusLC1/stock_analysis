@@ -20,7 +20,7 @@ from src.stock_service import StockService
 from src.valuations.lenses import LENSES
 from src.valuations.average_score import average_score
 
-YEARS = 20
+YEARS = 10
 
 def fetch_10yr_cagr(ticker: str) -> float | None:
     """Calculates the 10-year Compound Annual Growth Rate (CAGR) for a ticker."""

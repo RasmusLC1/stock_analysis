@@ -5,4 +5,5 @@ class LensKeys:
     HEALTH = "Health"
     QUALITY = "Quality"
     GARP = "Garp"
+    SCALE_DISRUPTOR = "Scale Disruptor"
     AVERAGE = "Average"

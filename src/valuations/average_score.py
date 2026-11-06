@@ -5,7 +5,8 @@ from .growth_score import score_growth
 from .value_score import score_value
 from .health_score import score_health
 from .quality_score import score_quality
-from .garp_score import score_garp  # Imported your new GARP lens
+from .garp_score import score_garp
+from .scale_disruptor_score import score_scale_disruptor  # Imported new scale disruptor lens
 from .scoring import ScoreResult, score_with
 from .dimension import Dimension
 from src.helper.lens_keys import LensKeys as key
@@ -32,14 +33,19 @@ def score_garp_lens(cfg) -> Optional[float]:
     return score_garp(cfg).score
 
 
-# Updated dimensions including GARP. 
-# Note: Negative weights (like Value) are supported safely when score_with uses absolute denominator scaling.
+def score_scale_disruptor_lens(cfg) -> Optional[float]:
+    """Returns the scale disruptor score if small cap, otherwise None (dropping it)."""
+    return score_scale_disruptor(cfg).score
+
+
+# Updated dimensions including Scale Disruptor
 DIMENSIONS = [
-    Dimension(key.GROWTH, score_growth_lens, 0.40),
-    Dimension(key.GARP, score_garp_lens, 0.25),          # Integrated your new GARP dimension with a balanced weight
-    Dimension(key.VALUE, score_value_lens, -0.141),    # Maintained negative correlation weight
-    Dimension(key.HEALTH, score_health_lens, 0.197),
-    Dimension(key.QUALITY, score_quality_lens, 0.30),
+    Dimension(key.GROWTH, score_growth_lens, 0.35),
+    Dimension("GARP", score_garp_lens, 0.20),
+    Dimension(key.VALUE, score_value_lens, -0.141),
+    Dimension(key.HEALTH, score_health_lens, 0.15),
+    Dimension(key.QUALITY, score_quality_lens, 0.20),
+    Dimension("ScaleDisruptor", score_scale_disruptor_lens, 0.20),  # Active only for small caps
 ]
 
 
