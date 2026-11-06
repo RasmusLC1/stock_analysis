@@ -3,6 +3,7 @@ from typing import Tuple, Optional
 
 @dataclass
 class InfoConfig:
+    ticker_symbol: str
     name: str
     currency: str
     sector: str

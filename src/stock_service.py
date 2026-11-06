@@ -20,9 +20,12 @@ class StockService:
     if not data:
       raise ValueError( f"Could not extract data '{ticker_symbol}'.")
 
+    return StockService.format_info(data)
   
+  @staticmethod
+  def format_info(data):
     return {
-        "symbol": ticker_symbol,
+        "symbol": data.ticker_symbol,
         "name": data.name,
         "sector": data.sector,
         "industry": data.industry,
@@ -32,18 +35,21 @@ class StockService:
         "pe_ratio": data.pe_ratio,
     }
 
+  @staticmethod
   def validate_info(ticker):
     info = ticker.info
     
     # Validate ticker existence
     if (
         not info
-        and "regularMarketPrice" not in info
-        and "currentPrice" not in info
-        and "longName" not in info
-      ):
+        or (
+            "regularMarketPrice" not in info
+            and "currentPrice" not in info
+            and "longName" not in info
+        )
+    ):
       return None
 
     return info
-  
+
       
