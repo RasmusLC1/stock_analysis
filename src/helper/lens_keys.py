@@ -4,4 +4,4 @@ class LensKeys:
     VALUE = "Value"
     HEALTH = "Health"
     QUALITY = "Quality"
-    AVERAGE = "average"
+    AVERAGE = "Average"

@@ -27,12 +27,12 @@ def score_quality_lens(cfg) -> Optional[float]:
     return score_quality(cfg).score
 
 
-# Equal weighting across core lenses (adjust weights if you want specific emphasis)
+# Testing based on backtest_lens_scores
 DIMENSIONS = [
-    Dimension(key.GROWTH, score_growth_lens),
-    Dimension(key.VALUE, score_value_lens),
-    Dimension(key.HEALTH, score_health_lens),
-    Dimension(key.QUALITY, score_quality_lens),
+    Dimension(key.GROWTH, score_growth_lens, 0.490),
+    Dimension(key.VALUE, score_value_lens, -0.324),
+    Dimension(key.HEALTH, score_health_lens, 0.399),
+    Dimension(key.QUALITY, score_quality_lens, 0.302),
 ]
 
 

@@ -8,6 +8,7 @@ from yfinance import Ticker
 class StockService:
   @staticmethod
   def fetch_stock_summary(ticker_symbol: str) -> dict:
+    ticker_symbol = StockService._normalize_ticker(ticker_symbol)
     ticker: Ticker = ApiFetch.fetch_stock_data(ticker_symbol)
 
     if not ticker:
@@ -39,4 +40,20 @@ class StockService:
 
     return info
 
+
+  def _normalize_ticker(ticker_symbol: str) -> str:
+      ticker_symbol = ticker_symbol.strip().upper()
       
+      # Example mapping for known European favorites or general heuristic
+      european_defaults = {
+          "RHM": "RHM.DE",
+          "ASML": "ASML.AS",
+          "RUA": "RUA.PA",
+      }
+      
+      if ticker_symbol in european_defaults:
+          return european_defaults[ticker_symbol]
+      
+      # If it's a known German company without a dot, default to .DE
+      # (or let user specify explicitly)
+      return ticker_symbol
