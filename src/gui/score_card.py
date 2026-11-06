@@ -1,13 +1,12 @@
 import tkinter as tk
 from typing import Optional
-
-from src.valuations.growth_score import GrowthResult
+from src.valuations.scoring import ScoreResult
 from .theme import GRADE_COLORS, Theme
 
-# Coverage below this means the score rests on little data - warn the user.
 LOW_COVERAGE = 0.6
 
 _LABELS = {
+    # Growth keys
     "growth_rate": "Growth",
     "growth_consistency": "Consistency",
     "profitability": "Profit",
@@ -15,16 +14,22 @@ _LABELS = {
     "cash_quality": "Cash",
     "balance_sheet": "Balance",
     "valuation": "Value",
+    "Price": "Price",
+    # Value keys
+    "Earnings": "Earnings",
+    "Book/Sales": "Book/Sales",
+    "EV": "EV",
+    "FCF yield": "FCF",
+    "Safety": "Safety",
+    "Quality": "Quality",
+    "Upside": "Upside",
 }
 
 
-class GrowthScoreCard(tk.Frame):
-  """
-  A small box showing the growth score, colored by grade, with a one-line
-  breakdown underneath. Call show(result) after each search, clear() to reset.
-  """
+class ScoreCard(tk.Frame):
+  """A card showing a score and grade for a specific lens (Growth, Value, etc.)."""
 
-  def __init__(self, parent):
+  def __init__(self, parent, title: str):
     super().__init__(parent)
     self.columnconfigure(1, weight=1)
 
@@ -42,7 +47,7 @@ class GrowthScoreCard(tk.Frame):
 
     # Text next to the badge
     self.caption = tk.Label(
-        self, text="Growth Quality Score", font=("Segoe UI", 10, "bold"), anchor="w"
+        self, text=title, font=("Segoe UI", 10, "bold"), anchor="w"
     )
     self.caption.grid(row=0, column=1, sticky="sw", padx=(12, 0))
 
@@ -54,7 +59,7 @@ class GrowthScoreCard(tk.Frame):
     self._theme: Optional[Theme] = None
     self.clear()
 
-  def show(self, result: GrowthResult):
+  def show(self, result: ScoreResult):
     bg, fg = GRADE_COLORS.get(result.grade, GRADE_COLORS["N/A"])
     score_text = "--" if result.score is None else f"{result.score:.0f}"
     self._paint_badge(bg, fg, score_text, f"Grade {result.grade}")
@@ -68,15 +73,19 @@ class GrowthScoreCard(tk.Frame):
       text += f"\n⚠ Low data coverage ({result.coverage:.0%}) - treat with caution"
     else:
       text += f"\nData coverage {result.coverage:.0%}"
+      
+    # Append any lens notes (e.g. Value trap warnings)
+    if result.notes:
+      text += f"\n⚡ {result.notes[0]}"
+
     self.detail.configure(text=text)
 
   def clear(self):
     bg, fg = GRADE_COLORS["N/A"]
     self._paint_badge(bg, fg, "--", "No data")
-    self.detail.configure(text="Search for a ticker to see its growth score.")
+    self.detail.configure(text="Search for a ticker to evaluate.")
 
   def apply_theme(self, t: Theme):
-    # The badge keeps its grade color; only the surrounding area follows the theme.
     self._theme = t
     self.configure(bg=t.bg)
     self.caption.configure(bg=t.bg, fg=t.fg)
