@@ -4,26 +4,59 @@ from typing import Optional
 from .scoring import ScoreResult, get, scale, grade
 
 
+def parse_market_cap(val) -> Optional[float]:
+    """Parses raw float/int OR formatted string ('1.5B', '$500M', '2.1T') to numeric value."""
+    if val is None:
+        return None
+    if isinstance(val, (int, float)):
+        return float(val)
+    if isinstance(val, str):
+        clean = val.replace("$", "").replace(",", "").strip().upper()
+        if not clean or clean == "N/A":
+            return None
+        try:
+            multiplier = 1.0
+            if clean.endswith("T"):
+                multiplier = 1e12
+                clean = clean[:-1]
+            elif clean.endswith("B"):
+                multiplier = 1e9
+                clean = clean[:-1]
+            elif clean.endswith("M"):
+                multiplier = 1e6
+                clean = clean[:-1]
+            elif clean.endswith("K"):
+                multiplier = 1e3
+                clean = clean[:-1]
+            return float(clean) * multiplier
+        except (ValueError, TypeError):
+            return None
+    return None
+
+
 def score_scale_disruptor(cfg) -> ScoreResult:
     """
     Scale Disruptor Score Lens.
-    Triggers ONLY for small caps (Market Cap < $5B) where trailing net income 
-    might be negative due to scaling/R&D, but gross margins and liquidity are strong.
+    Triggers ONLY for verified small caps (Market Cap < $5B). 
+    Returns score=None for large caps or missing market cap data.
     """
-    market_cap = get(cfg, "market_cap") or get(cfg, "marketCap")
-    
-    # Define small-cap threshold (e.g., $5 Billion)
-    SMALL_CAP_THRESHOLD = 5_000_000_000
-    
-    # If it's a mid or large cap, return None so it drops out of the composite score cleanly
-    if market_cap is not None and market_cap > SMALL_CAP_THRESHOLD:
+    raw_market_cap = getattr(cfg, "market_cap", None) or getattr(cfg, "marketCap", None)
+    if raw_market_cap is None:
+        raw_market_cap = get(cfg, "market_cap") or get(cfg, "marketCap")
+
+    market_cap = parse_market_cap(raw_market_cap)
+
+    SMALL_CAP_THRESHOLD = 5_000_000_000  # $5 Billion
+
+    # Explicit check: If market cap is missing OR exceeds $5B, do NOT trigger
+    if market_cap is None or market_cap > SMALL_CAP_THRESHOLD:
         return ScoreResult(
             lens="ScaleDisruptor",
             ticker=getattr(cfg, "ticker_symbol", "?"),
             score=None,
             grade="N/A",
             coverage=0.0,
-            notes=["Exceeds small-cap threshold; Scale Disruptor lens inactive."]
+            notes=["Exceeds small-cap threshold ($5B) or missing market cap; Scale Disruptor inactive."]
         )
 
     # Extract metrics tailored for scaling small-caps
@@ -37,14 +70,8 @@ def score_scale_disruptor(cfg) -> ScoreResult:
         "Revenue Growth": revenue_growth * 100 if revenue_growth is not None else None
     }
 
-    # Score components (0-100 scale)
-    # Gross Margins: Higher is better (e.g., 20% = 0, 60%+ = 100)
     gm_score = scale(gross_margins, bad=0.20, good=0.60) if gross_margins is not None else None
-
-    # Current Ratio: Liquidity safety net for small caps (e.g., 1.0 = 0, 3.0+ = 100)
     cr_score = scale(current_ratio, bad=1.0, good=3.0) if current_ratio is not None else None
-
-    # Revenue Growth: Top-line expansion driver (e.g., 0% = 0, 30%+ = 100)
     rg_score = scale(revenue_growth, bad=0.0, good=0.30) if revenue_growth is not None else None
 
     weights = {
