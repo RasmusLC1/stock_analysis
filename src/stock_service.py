@@ -14,6 +14,8 @@ class StockService:
       raise ValueError( f"Could not retrieve valid data for ticker '{ticker_symbol}'.")
 
     info = StockService.validate_info(ticker)
+    print("Ticker:\t", ticker)
+    print("Info:\t", info)
 
     data: InfoConfig = ExtractInfo.extract_info(info, ticker_symbol)
 
