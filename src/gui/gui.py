@@ -6,6 +6,7 @@ from src.valuations.growth_score import score_company
 from ..stock_service import StockService
 from .theme import DARK, LIGHT, Theme
 from .widgets import HeaderBar, ResultsPanel, SearchBar
+from .helper.format import Formatter
 
 
 class StockAppGUI:
@@ -57,29 +58,6 @@ class StockAppGUI:
       messagebox.showerror("Error", str(e))
       return
 
-    self.results.set_text(self.format_summary(data))
+    self.results.set_text(Formatter.format_summary(data))
     self.score_card.show(result)
 
-  @staticmethod
-  def format_summary(data) -> str:
-    return (
-        f"Company: {data.name} ({data.ticker_symbol})\n"
-        f"Sector: {data.sector} | Industry: {data.industry}\n"
-        f"----------------------------------------\n"
-        f"Current Price: {data.price} {data.currency}\n"
-        f"Market Cap:    {data.market_cap}\n"
-        f"Trailing P/E:  {data.pe_ratio}\n"
-    )
-
-  @staticmethod
-  def format_info(data) -> dict:
-    return {
-        "symbol": data.ticker_symbol,
-        "name": data.name,
-        "sector": data.sector,
-        "industry": data.industry,
-        "currency": data.currency,
-        "price": data.price,
-        "market_cap": data.market_cap,
-        "pe_ratio": data.pe_ratio,
-    }
