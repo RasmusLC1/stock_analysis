@@ -7,7 +7,7 @@ from ..stock_service import StockService
 from .theme import DARK, LIGHT, Theme
 from .widgets import HeaderBar, ResultsPanel, SearchBar
 from .helper.format import Formatter
-
+from src.helper.lens_keys import LensKeys as key
 
 class StockAppGUI:
   """Composes the components and wires them to StockService."""
@@ -19,7 +19,7 @@ class StockAppGUI:
     self.root.minsize(440, 480)
 
     self.theme: Theme = DARK
-    self.current_lens_name = tk.StringVar(value="Growth")
+    self.current_lens_name = tk.StringVar(value=key.AVERAGE)
     self.current_lens_name.trace_add("write", lambda *_: self.refresh_score_display())
 
     self.root.rowconfigure(4, weight=1)

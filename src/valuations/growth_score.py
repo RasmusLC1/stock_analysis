@@ -15,7 +15,7 @@ from typing import Optional
 
 from .scoring import ScoreResult, avg, get, scale, score_with
 from .dimension import Dimension
-
+from src.helper.lens_keys import LensKeys as key
 
 def score_growth_rate(cfg) -> Optional[float]:
   rev = scale(get(cfg, "revenue_growth"), bad=0.0, good=0.25)
@@ -81,7 +81,7 @@ DIMENSIONS = [
 
 
 def score_growth(cfg) -> ScoreResult:
-  return score_with("Growth", cfg, DIMENSIONS)
+  return score_with(key.GROWTH, cfg, DIMENSIONS)
 
 
 score_company = score_growth  # backwards-compatible name from the first version

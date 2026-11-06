@@ -4,7 +4,7 @@ from typing import Optional
 
 from .scoring import ScoreResult, avg, get, scale, score_with
 from .dimension import Dimension
-
+from src.helper.lens_keys import LensKeys as key
 
 def score_leverage(cfg) -> Optional[float]:
   """Debt-to-Equity: lower leverage is healthier."""
@@ -39,4 +39,4 @@ DIMENSIONS = [
 
 
 def score_health(cfg) -> ScoreResult:
-  return score_with("Health", cfg, DIMENSIONS)
+  return score_with(key.HEALTH, cfg, DIMENSIONS)

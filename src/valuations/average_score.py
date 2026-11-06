@@ -7,7 +7,7 @@ from .health_score import score_health
 from .quality_score import score_quality
 from .scoring import ScoreResult, score_with
 from .dimension import Dimension
-
+from src.helper.lens_keys import LensKeys as key
 
 
 # Individual dimension getters for each core lens score
@@ -29,10 +29,10 @@ def score_quality_lens(cfg) -> Optional[float]:
 
 # Equal weighting across core lenses (adjust weights if you want specific emphasis)
 DIMENSIONS = [
-    Dimension("Growth", score_growth_lens),
-    Dimension("Value", score_value_lens),
-    Dimension("Health", score_health_lens),
-    Dimension("Quality", score_quality_lens),
+    Dimension(key.GROWTH, score_growth_lens),
+    Dimension(key.VALUE, score_value_lens),
+    Dimension(key.HEALTH, score_health_lens),
+    Dimension(key.QUALITY, score_quality_lens),
 ]
 
 

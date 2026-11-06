@@ -19,7 +19,7 @@ from typing import Optional
 from .growth_score import score_balance_sheet
 from .scoring import ScoreResult, avg, get, grade, scale, score_with
 from .dimension import Dimension
-
+from src.helper.lens_keys import LensKeys as key
 
 def _multiple(x: Optional[float], bad: float, good: float) -> Optional[float]:
   """Lower multiples are better. None = no data. <= 0 means losses / negative book: worst."""
@@ -87,7 +87,7 @@ TRAP_SCORE_CAP = 45.0
 
 
 def score_value(cfg) -> ScoreResult:
-  result = score_with("Value", cfg, DIMENSIONS)
+  result = score_with(key.VALUE, cfg, DIMENSIONS)
   quality = result.breakdown.get("Quality")
   if (
       result.score is not None

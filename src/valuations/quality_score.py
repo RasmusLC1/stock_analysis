@@ -4,7 +4,7 @@ from typing import Optional
 
 from .scoring import ScoreResult, avg, get, scale, score_with
 from .dimension import Dimension
-
+from src.helper.lens_keys import LensKeys as key
 
 def score_profit_margins(cfg) -> Optional[float]:
   """Gross and Operating margins: pricing power indicator."""
@@ -36,4 +36,4 @@ DIMENSIONS = [
 ]
 
 def score_quality(cfg) -> ScoreResult:
-  return score_with("Quality", cfg, DIMENSIONS)
+  return score_with(key.QUALITY, cfg, DIMENSIONS)
