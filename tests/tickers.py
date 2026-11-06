@@ -259,4 +259,74 @@ ADDITIONAL_TICKERS_100 = [
     "NUE",       # Nucor Corporation (US - Steel manufacturer)
     "MLM",       # Martin Marietta Materials (US - Aggregates and construction materials)
     "VMC"        # Vulcan Materials (US - Construction aggregates)
+
+    # ==========================================
+    # 1. EUROPEAN SPECIALTY & DEFENSE STALWARTS
+    # ==========================================
+    "BA.L",       # BAE Systems (UK) - Defense, aerospace, and cybersecurity
+    "HO.PA",      # Thales SA (France) - Aerospace, defense, and digital identity
+    "SAF.PA",     # Safran SA (France) - Aerospace engines and equipment
+    "MTX.DE",     # MTX / MTU Aero Engines (Germany) - Commercial and military turbine engines
+    "ASGR.SW",    # Schindler Holding (Switzerland) - Elevators, escalators, and urban mobility
+    "SGE.L",      # Sage Group (UK) - Enterprise accounting and payroll software
+    "FLTR.L",     # Flutter Entertainment (UK/Global) - Online sports betting and gaming titan
+    "EDF.PA",     # Electricité de France (France) - Nuclear and low-carbon energy infrastructure
+    "NOEJ.VI",    # Verbund AG (Austria) - Hydroelectric power generation and utility
+    "DSY.PA",     # Dassault Systèmes (France) - 3D design, 3D digital mock-up, and PLM software
+
+    # ==========================================
+    # 2. JAPANESE PRECISION, ROBOTICS & CONGLOMERATES
+    # ==========================================
+    "6758.T",     # Sony Group Corporation (Japan primary listing)
+    "7203.T",     # Toyota Motor Corporation (Japan primary listing)
+    "6861.T",     # Keyence Corporation (Japan) - Factory automation sensors and machine vision
+    "6501.T",     # Hitachi Ltd (Japan) - IT, digital systems, and industrial infrastructure
+    "8035.T",     # Tokyo Electron (Japan) - Semiconductor production equipment
+    "9983.T",     # Fast Retailing / Uniqlo (Japan) - Global apparel retail powerhouse
+    "4063.T",     # Shin-Etsu Chemical (Japan) - Silicon wafers and PVC global leader
+    "6902.T",     # Denso Corporation (Japan) - Advanced automotive technology and components
+    "7974.T",     # Nintendo Co. Ltd (Japan) - Interactive entertainment and video games
+    "6367.T",     # Daikin Industries (Japan) - Global air conditioning and HVAC leader
+
+    # ==========================================
+    # 3. LATIN AMERICAN & AFRICAN EXPANSION
+    # ==========================================
+    "WALMEX.MX",  # Wal-Mart de México (Mexico) - Dominant omnichannel retail network
+    "LABB.MX",    # Genomma Lab Internacional (Mexico) - Pharmaceutical and personal care brands
+    "ASURB.MX",   # Grupo Aeroportuario del Sureste (Mexico primary line)
+    "SPK.JO",     # Shoprite Holdings (South Africa) - Massive pan-African food retailer
+    "CPI.JO",     # Capitec Bank Holdings (South Africa) - Retail banking innovator
+    "AGL.JO",     # Anglo American plc (South Africa/UK primary) - Diversified global mining
+    "MTN.JO",     # MTN Group (South Africa) - Pan-African telecommunications leader
+    "EXO.JO",     # Exxaro Resources (South Africa) - Coal and clean energy transition
+    "BTE.TO",     # Baytex Energy (Canada/LatAm operations) - Independent oil and gas producer
+    "FR.TO",      # First Majestic Silver (Canada/Mexico) - Precious metals mining
+
+    # ==========================================
+    # 4. CANADIAN CLEAN TECH, ENERGY & SPECIALTY REITs
+    # ==========================================
+    "AQN.TO",     # Algonquin Power & Utilities (Canada) - Renewable energy and regulated utilities
+    "INE.TO",     # Innergex Renewable Energy (Canada) - Independent renewable power producer
+    "NPI.TO",     # Northland Power (Canada) - Global green power infrastructure developer
+    "CAR-UN.TO",  # Canadian Apartment Properties REIT (Canada) - Residential real estate compounding
+    "GRT-UN.TO",  # Granite REIT (Canada) - Industrial and logistics real estate
+    "DIR-UN.TO",  # Dream Industrial REIT (Canada) - Logistics real estate platform
+    "TRP.TO",     # TC Energy Corporation (Canada) - Energy infrastructure and natural gas pipelines
+    "CVE.TO",     # Cenovus Energy (Canada) - Integrated oil sands and refining enterprise
+    "IMO.TO",     # Imperial Oil (Canada) - Upstream oil extraction and downstream refining
+    "WN.TO",      # George Weston Limited (Canada) - Food processing and retail holding company
+
+    # ==========================================
+    # 5. SOFTWARE, CYBERSECURITY & TECH DISRUPTORS (US/GLOBAL)
+    # ==========================================
+    "CRWD",       # CrowdStrike Holdings (US) - Cloud-native endpoint cybersecurity platform
+    "PANW",       # Palo Alto Networks (US) - Enterprise cybersecurity network infrastructure
+    "NET",        # Cloudflare Inc (US) - Edge cloud platform, security, and developer services
+    "DDOG",       # Datadog Inc (US) - Cloud observability and monitoring platform
+    "ANET",       # Arista Networks (US) - Cloud networking switches and data center infrastructure
+    "HUBS",       # HubSpot Inc (US) - Inbound marketing and CRM software platform
+    "TEAM",       # Atlassian Corp (Australia/US) - Collaboration and developer software tools
+    "ZS",         # Zscaler Inc (US) - Cloud security and Zero Trust architecture
+    "FTNT",       # Fortinet Inc (US) - Network security appliances and cybersecurity software
+    "PATH"        # UiPath Inc (US) - Robotic process automation (RPA) enterprise software
 ]

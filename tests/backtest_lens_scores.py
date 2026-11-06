@@ -19,7 +19,7 @@ from src.caching.cache import Cache  # Import your SQLite Cache class
 from src.valuations.lenses import LENSES
 from src.valuations.average_score import average_score
 
-YEARS = 10
+YEARS = 20
 
 def fetch_10yr_cagr(ticker: str) -> float | None:
     """Calculates the 10-year CAGR using SQLite cache, falling back to yfinance if missing."""
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         print(df_results.describe())
         
         # Correlation Analysis against 10Yr CAGR
-        print("\n--- Correlation with 10-Year Historical CAGR ---")
+        print(f"\n--- Correlation with {YEARS}-Year Historical CAGR ---")
         numeric_cols = df_results.select_dtypes(include=["number"]).columns
         correlations = df_results[numeric_cols].corr()[f"{YEARS}Yr_CAGR_Pct"].sort_values(ascending=False)
         print(correlations)

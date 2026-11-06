@@ -40,12 +40,12 @@ def score_scale_disruptor_lens(cfg) -> Optional[float]:
 
 # Updated dimensions including Scale Disruptor
 DIMENSIONS = [
-    Dimension(key.GROWTH, score_growth_lens, 0.35),
-    Dimension("GARP", score_garp_lens, 0.20),
-    Dimension(key.VALUE, score_value_lens, -0.141),
+    Dimension(key.GROWTH, score_growth_lens, 0.40),
+    Dimension(key.QUALITY, score_quality_lens, 0.30),
     Dimension(key.HEALTH, score_health_lens, 0.15),
-    Dimension(key.QUALITY, score_quality_lens, 0.20),
-    Dimension("ScaleDisruptor", score_scale_disruptor_lens, 0.20),  # Active only for small caps
+    Dimension("GARP", score_garp_lens, 0.10),
+    Dimension(key.VALUE, score_value_lens, -0.05),
+    Dimension("ScaleDisruptor", score_scale_disruptor_lens, 0.15),
 ]
 
 

@@ -1,101 +1,51 @@
-"""
-Value lens: is the stock cheap relative to what the business earns, and is it
-cheap for a good reason (value trap) or not?
-
-Fields read from InfoConfig (yfinance `Ticker.info` key in brackets):
-
-  pe_ratio [trailingPE]            forward_pe [forwardPE]
-  price_to_book [priceToBook]      price_to_sales [priceToSalesTrailing12Months]
-  enterprise_to_ebitda [enterpriseToEbitda]
-  free_cashflow [freeCashflow]     market_cap [marketCap]
-  price [currentPrice]             target_mean_price [targetMeanPrice]
-  -- reused from the growth lens --
-  return_on_equity, revenue_growth, operating_margins, debt_to_equity, current_ratio
-"""
 from __future__ import annotations
 
 from typing import Optional
-
-from .growth_score import score_balance_sheet
-from .scoring import ScoreResult, avg, get, grade, scale, score_with
+from .scoring import ScoreResult, avg, get, scale, score_with
 from .dimension import Dimension
 from src.helper.lens_keys import LensKeys as key
 
-def _multiple(x: Optional[float], bad: float, good: float) -> Optional[float]:
-  """Lower multiples are better. None = no data. <= 0 means losses / negative book: worst."""
-  if x is None:
-    return None
-  if x <= 0:
-    return 0.0
-  return scale(x, bad, good)
+def score_balance_sheet(cfg) -> Optional[float]:
+    """Debt-to-Equity and Current Ratio safety margin for value assessment."""
+    de, cr = get(cfg, "debt_to_equity"), get(cfg, "current_ratio")
+    return avg([scale(de, bad=200.0, good=30.0), scale(cr, bad=0.8, good=2.0)])
 
+def score_pe(cfg) -> Optional[float]:
+    """Trailing P/E ratio: lower is generally cheaper/better for value."""
+    pe = get(cfg, "trailing_pe") or get(cfg, "pe_ratio")
+    if pe is None or pe <= 0:
+        return None
+    return scale(pe, bad=40.0, good=10.0)
 
-def score_earnings_multiple(cfg) -> Optional[float]:
-  trailing = _multiple(get(cfg, "pe_ratio"), bad=35.0, good=10.0)
-  forward = _multiple(get(cfg, "forward_pe"), bad=30.0, good=9.0)
-  return avg([trailing, forward])
+def score_pb(cfg) -> Optional[float]:
+    """Price-to-Book ratio."""
+    pb = get(cfg, "price_to_book") or get(cfg, "pb_ratio")
+    if pb is None or pb <= 0:
+        return None
+    return scale(pb, bad=6.0, good=1.0)
 
+def score_ps(cfg) -> Optional[float]:
+    """Price-to-Sales ratio."""
+    ps = get(cfg, "price_to_sales") or get(cfg, "ps_ratio")
+    if ps is None or ps <= 0:
+        return None
+    return scale(ps, bad=8.0, good=1.0)
 
-def score_book_and_sales(cfg) -> Optional[float]:
-  pb = _multiple(get(cfg, "price_to_book"), bad=6.0, good=1.0)
-  ps = _multiple(get(cfg, "price_to_sales"), bad=10.0, good=1.0)
-  return avg([pb, ps])
-
-
-def score_ev_multiple(cfg) -> Optional[float]:
-  return _multiple(get(cfg, "enterprise_to_ebitda"), bad=20.0, good=6.0)
-
-
-def score_cash_yield(cfg) -> Optional[float]:
-  """Free cash flow yield: how much cash the business generates per krone of market cap."""
-  fcf, cap = get(cfg, "free_cashflow"), get(cfg, "market_cap")
-  if fcf is None or cap is None or cap <= 0:
-    return None
-  return scale(fcf / cap, bad=0.0, good=0.08)
-
-
-def score_value_trap_check(cfg) -> Optional[float]:
-  """Cheap AND shrinking / unprofitable is a trap, so reward a healthy core business."""
-  roe = scale(get(cfg, "return_on_equity"), bad=0.0, good=0.15)
-  rev = scale(get(cfg, "revenue_growth"), bad=-0.10, good=0.03)
-  margin = scale(get(cfg, "operating_margins"), bad=0.0, good=0.15)
-  return avg([roe, rev, margin])
-
-
-def score_analyst_upside(cfg) -> Optional[float]:
-  """Weak signal (analysts are optimistic on average), so it carries little weight."""
-  price, target = get(cfg, "price"), get(cfg, "target_mean_price")
-  if price is None or price <= 0 or target is None:
-    return None
-  return scale(target / price - 1.0, bad=-0.10, good=0.30)
-
+def score_dividend_yield(cfg) -> Optional[float]:
+    """Dividend yield: higher is better for value/income."""
+    div = get(cfg, "dividend_yield")
+    if div is None:
+        return None
+    # yfinance often represents dividend yield as a decimal (e.g. 0.03 = 3%)
+    return scale(div, bad=0.0, good=0.06)
 
 DIMENSIONS = [
-    Dimension("Earnings", score_earnings_multiple, 0.25),
-    Dimension("Book/Sales", score_book_and_sales, 0.15),
-    Dimension("EV", score_ev_multiple, 0.15),
-    Dimension("FCF yield", score_cash_yield, 0.20),
-    Dimension("Safety", score_balance_sheet, 0.10),
-    Dimension("Quality", score_value_trap_check, 0.10),
-    Dimension("Upside", score_analyst_upside, 0.05),
+    Dimension("P/E", score_pe, 0.30),
+    Dimension("P/B", score_pb, 0.20),
+    Dimension("P/S", score_ps, 0.20),
+    Dimension("Balance", score_balance_sheet, 0.15),
+    Dimension("Dividend", score_dividend_yield, 0.15),
 ]
 
-# Very low multiples can outvote the quality check in a weighted average, so a
-# business that scores badly on quality is capped: cheap + failing is a trap, not value.
-TRAP_QUALITY_BELOW = 30.0
-TRAP_SCORE_CAP = 45.0
-
-
 def score_value(cfg) -> ScoreResult:
-  result = score_with(key.VALUE, cfg, DIMENSIONS)
-  quality = result.breakdown.get("Quality")
-  if (
-      result.score is not None
-      and quality is not None
-      and quality < TRAP_QUALITY_BELOW
-      and result.score > TRAP_SCORE_CAP
-  ):
-    result.score = TRAP_SCORE_CAP
-    result.grade = grade(TRAP_SCORE_CAP)
-    result.notes.append("Value trap risk: cheap, but weak or shrinking business - score capped")
-  return result
+    return score_with(key.VALUE, cfg, DIMENSIONS)

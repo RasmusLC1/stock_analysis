@@ -20,7 +20,7 @@ class StockService:
     # 2. Check if cache already exists and load it
     cached_data = Cache.check_cache(ticker_symbol, period)
     if cached_data is not None:
-      print("CACHE FOUND :\t", ticker_symbol)
+      print("CACHE FOUND:\t", ticker_symbol)
       return cached_data
 
     # 3. Fetch via API if not cached
