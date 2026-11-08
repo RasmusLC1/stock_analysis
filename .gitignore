@@ -1,1 +1,5 @@
 src/data_cache/
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
