@@ -8,7 +8,10 @@ from ..stock_service import StockService
 from .theme import DARK, LIGHT, Theme
 from .widgets import HeaderBar, SearchBar
 from .helper.format import Formatter
+from .date_picker import DatePicker
 from src.helper.lens_keys import LensKeys as key
+from datetime import date
+from src.helper.date_processor import Date_Processor
 
 
 class StockAppGUI:
@@ -44,6 +47,10 @@ class StockAppGUI:
     self.lens_menu = tk.OptionMenu(self.control_frame, self.current_lens_name, *LENSES.keys())
     self.lens_menu.grid(row=0, column=1, sticky="w")
 
+    # Date picker
+    self.date_picker = DatePicker(self.control_frame, on_change=self.handle_date_change)
+    self.date_picker.grid(row=0, column=2, sticky="e", padx=(10, 0))
+
     # Dynamic Score Card
     self.score_card = ScoreCard(self.root, "Quality & Valuation Score")
     self.score_card.grid(row=3, column=0, sticky="ew", padx=15, pady=(5, 5))
@@ -54,7 +61,7 @@ class StockAppGUI:
 
     self.latest_data = None
 
-    self._themed = [self.header, self.search_bar, self.score_card, self.results]
+    self._themed = [self.header, self.search_bar, self.date_picker, self.score_card, self.results]
     self.apply_theme()
 
   def toggle_theme(self):
@@ -87,7 +94,9 @@ class StockAppGUI:
   def handle_search(self):
     ticker = self.search_bar.get_ticker()
     try:
-      self.latest_data = StockService.fetch_stock_summary(ticker)
+      str_date = Date_Processor.process_date(self.date_picker._date)
+      print(str_date)
+      self.latest_data = StockService.fetch_stock_summary(ticker, str_date)
     except Exception as e:
       messagebox.showerror("Error", str(e))
       return
@@ -104,3 +113,7 @@ class StockAppGUI:
       result = scoring_fn(self.latest_data)
       self.score_card.caption.configure(text=f"{lens_key} Lens Score")
       self.score_card.show(result)
+
+  def handle_date_change(self, selected: date):
+    if self.latest_data:   # re-run the search for the new date
+      self.handle_search()

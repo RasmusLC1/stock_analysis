@@ -1,48 +1,45 @@
 from __future__ import annotations
 
-from pathlib import Path
-import pickle
+from datetime import date
 from .yf_api.api_fetch import ApiFetch
 from .info.extract_info import ExtractInfo
 from .info.info_config import InfoConfig
 from .caching.cache import Cache
-from yfinance import Ticker
 
 # Central stock handling class
 class StockService:
   @staticmethod
-  def fetch_stock_summary(ticker_symbol: str, period: str = "1d") -> InfoConfig | None:
+  def fetch_stock_summary(ticker_symbol: str, start: str | None = None) -> InfoConfig | None:
     ticker_symbol = StockService._normalize_ticker(ticker_symbol)
 
-    # 1. Construct the expected cache file path
-    
+    # Picking today (the default) means "latest"; ISO date strings compare correctly as text
+    if not start or start >= date.today().isoformat():
+      start = None
+    key = start or "latest"
 
-    # 2. Check if cache already exists and load it
-    cached_data = Cache.check_cache(ticker_symbol, period)
+    cached_data = Cache.check_cache(ticker_symbol, key)
     if cached_data is not None:
-      print("CACHE FOUND:\t", ticker_symbol)
+      print("CACHED DATA")
       return cached_data
 
-    # 3. Fetch via API if not cached
-    ticker: Ticker = ApiFetch.fetch_stock_data(ticker_symbol, period)
-
-    if not ticker:
+    result = ApiFetch.fetch_stock_data(ticker_symbol, start)
+    if not result:
       raise ValueError(f"Could not retrieve valid data for ticker '{ticker_symbol}'.")
+    ticker, hist = result
 
     info = StockService.validate_info(ticker)
     if not info:
       return None
 
     data: InfoConfig = ExtractInfo.extract_info(info, ticker_symbol)
-
     if not data:
       raise ValueError(f"Could not extract data '{ticker_symbol}'.")
 
-    # 4. Save successfully fetched data to local cache
-    Cache.store_cache(ticker_symbol, period, data)
+    if start:  # change from the first trading day on/after the picked date to the latest close
+      data.price_change_pct = (hist["Close"].iloc[-1] / hist["Close"].iloc[0] - 1) * 100
 
+    Cache.store_cache(ticker_symbol, key, data)
     return data
-
 
 
   @staticmethod
