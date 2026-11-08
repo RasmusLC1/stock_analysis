@@ -23,7 +23,6 @@ class CalculateSP500:
         average_info_config = ExtractInfo.extract_info(average_values, TICKER)
 
         Cache.store_cache(TICKER, current_month_year, average_info_config)
-        print("CACHE STORED")
         return average_info_config
         
     @staticmethod

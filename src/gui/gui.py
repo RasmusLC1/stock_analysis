@@ -89,7 +89,6 @@ class StockAppGUI:
     ticker = self.search_bar.get_ticker()
     try:
       self.latest_data = StockService.fetch_stock_summary(ticker)
-      CalculateSP500.calculate_average_values()
     except Exception as e:
       messagebox.showerror("Error", str(e))
       return
