@@ -22,8 +22,6 @@ class StockService:
     Cache.store_cache(ticker_symbol, period, data)
 
     return data
-
-
   
 
   @staticmethod

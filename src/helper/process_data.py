@@ -2,11 +2,11 @@ from src.helper.validate_stock_info import ValidateStockInfo
 from src.yf_api.api_fetch import ApiFetch
 from src.info.extract_info import ExtractInfo
 from src.info.info_config import InfoConfig
-from src.caching.cache import Cache
 from yfinance import Ticker
 
 class ProcessData:
 
+    @staticmethod
     def process_data(ticker_symbol: str, period: str = "1d"):
          # 3. Fetch via API if not cached
           ticker: Ticker = ApiFetch.fetch_stock_data(ticker_symbol, period)

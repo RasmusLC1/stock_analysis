@@ -4,7 +4,8 @@ from tkinter import messagebox
 from .score_card import ScoreCard
 from .filtered_results import FilteredResultsPanel  # Import new component
 from src.valuations.lenses import LENSES
-from ..stock_service import StockService
+from src.stock_service import StockService
+from src.calculate_sp.calculate_sp import CalculateSP500
 from .theme import DARK, LIGHT, Theme
 from .widgets import HeaderBar, SearchBar
 from .helper.format import Formatter
@@ -88,6 +89,7 @@ class StockAppGUI:
     ticker = self.search_bar.get_ticker()
     try:
       self.latest_data = StockService.fetch_stock_summary(ticker)
+      CalculateSP500.calculate_average_values()
     except Exception as e:
       messagebox.showerror("Error", str(e))
       return

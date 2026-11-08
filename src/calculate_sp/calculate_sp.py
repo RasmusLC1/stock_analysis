@@ -3,20 +3,23 @@ from src.yf_api.api_fetch import ApiFetch
 from yfinance import Ticker
 from src.info.info_config import InfoConfig
 from src.info.extract_info import ExtractInfo
+from src.helper.process_data import ProcessData
 
 class CalculateSP500:
 
     def calculate_average_values():
         tickers = ExtractTickers.extract_tickers()
+        print(tickers)
+        data_list = CalculateSP500.extract_ticker_data(tickers)
         
 
     def extract_ticker_data(tickers):
-        info_list = []
+        data_list = []
         for ticker_symbol in tickers:
-            ticker: Ticker = ApiFetch.fetch_stock_data(ticker_symbol, "1d")
-            if not ticker:
-                print("COULD NOT FIND:\t", ticker_symbol)
+            data = ProcessData.process_data(ticker_symbol)
+            if not data:
                 continue
+            print(data.ticker_symbol, data.market_cap, data.pe_ratio)
+            data_list.append(data)
 
-            data: InfoConfig = ExtractInfo.extract_info(info, ticker_symbol)
-            info_list.append()
+        return data_list
