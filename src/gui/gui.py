@@ -21,6 +21,8 @@ class StockAppGUI:
     self.root.geometry("500x580")
     self.root.minsize(440, 500)
 
+    self.sp500_values = CalculateSP500()
+
     self.theme: Theme = DARK
     self.current_lens_name = tk.StringVar(value=key.AVERAGE)
     self.current_lens_name.trace_add("write", lambda *_: self.refresh_score_display())
@@ -58,6 +60,8 @@ class StockAppGUI:
     self._themed = [self.header, self.search_bar, self.score_card, self.results]
     self.apply_theme()
 
+
+
   def toggle_theme(self):
     self.theme = LIGHT if self.theme is DARK else DARK
     self.apply_theme()
@@ -89,6 +93,8 @@ class StockAppGUI:
     ticker = self.search_bar.get_ticker()
     try:
       self.latest_data = StockService.fetch_stock_summary(ticker)
+      values = self.sp500_values.get_average_values()
+      print(values)
     except Exception as e:
       messagebox.showerror("Error", str(e))
       return
