@@ -8,13 +8,14 @@ from .garp_score import score_garp
 from .scale_disruptor_score import score_scale_disruptor
 from .scoring import ScoreResult
 from src.helper.lens_keys import LensKeys as key
+from typing import Callable, Optional
 
-LENSES: dict[str, Callable[[object], ScoreResult]] = {
+LENSES: dict[str, Callable[[object, Optional[object]], ScoreResult]] = {
     key.AVERAGE : average_score,
-    key.GROWTH : score_growth,
-    key.VALUE : score_value,
-    key.HEALTH : score_health,
-    key.QUALITY : score_quality,
-    key.GARP : score_garp,
-    key.SCALE_DISRUPTOR : score_scale_disruptor,
+    key.GROWTH : lambda cfg, sp: score_growth(cfg, sp),
+    key.VALUE : lambda cfg, sp: score_value(cfg, sp),
+    key.HEALTH : lambda cfg, sp: score_health(cfg, sp),
+    key.QUALITY : lambda cfg, sp: score_quality(cfg, sp),
+    key.GARP : lambda cfg, sp: score_garp(cfg, sp),
+    key.SCALE_DISRUPTOR : lambda cfg, sp=None: score_scale_disruptor(cfg, sp),
 }
