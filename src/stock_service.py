@@ -17,6 +17,9 @@ class StockService:
       return cached_data
 
     data = ProcessData.process_data(ticker_symbol, period)
+    if not data:
+       print("Failed to create data: ", ticker_symbol)
+       return None
 
     # 4. Save successfully fetched data to local cache
     Cache.store_cache(ticker_symbol, period, data)
