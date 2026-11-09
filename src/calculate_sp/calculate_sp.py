@@ -13,6 +13,7 @@ TICKER = "S&P500"
 class CalculateSP500:
     def __init__(self):
         self.average_values = None
+        self.get_average_values()
     
     def get_average_values(self):
         if self.average_values:

@@ -57,13 +57,19 @@ class ScoreResult:
   notes: list[str] = field(default_factory=list)  # warnings shown on the card
 
 
-def score_with(lens: str, cfg, dimensions: list[Dimension]) -> ScoreResult:
+def score_with(lens: str, cfg, dimensions: list[Dimension], context=None) -> ScoreResult:
     breakdown: dict[str, Optional[float]] = {}
     used_weight = weighted_sum = 0.0
     total_weight = sum(abs(d.weight) for d in dimensions) # Sum of absolute weights
 
     for d in dimensions:
-        s = d.fn(cfg)
+        # Check if the dimension function accepts a context argument or just cfg
+        try:
+            s = d.fn(cfg, context)
+        except TypeError:
+            # Fallback for older dimension functions that only take cfg
+            s = d.fn(cfg)
+            
         breakdown[d.label] = None if s is None else round(s, 1)
         if s is not None:
             # Multiply by the raw weight (which can be negative)

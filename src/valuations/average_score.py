@@ -12,30 +12,30 @@ from .dimension import Dimension
 from src.helper.lens_keys import LensKeys as key
 
 
-# Individual dimension getters for each core lens score
-def score_growth_lens(cfg) -> Optional[float]:
-    return score_growth(cfg).score
+# Individual dimension getters accepting sp500 context
+def score_growth_lens(cfg, sp500=None) -> Optional[float]:
+    return score_growth(cfg, sp500).score
 
 
-def score_value_lens(cfg) -> Optional[float]:
-    return score_value(cfg).score
+def score_value_lens(cfg, sp500=None) -> Optional[float]:
+    return score_value(cfg, sp500).score
 
 
-def score_health_lens(cfg) -> Optional[float]:
-    return score_health(cfg).score
+def score_health_lens(cfg, sp500=None) -> Optional[float]:
+    return score_health(cfg, sp500).score
 
 
-def score_quality_lens(cfg) -> Optional[float]:
-    return score_quality(cfg).score
+def score_quality_lens(cfg, sp500=None) -> Optional[float]:
+    return score_quality(cfg, sp500).score
 
 
-def score_garp_lens(cfg) -> Optional[float]:
-    return score_garp(cfg).score
+def score_garp_lens(cfg, sp500=None) -> Optional[float]:
+    return score_garp(cfg, sp500).score
 
 
-def score_scale_disruptor_lens(cfg) -> Optional[float]:
+def score_scale_disruptor_lens(cfg, sp500=None) -> Optional[float]:
     """Returns the scale disruptor score if small cap, otherwise None (dropping it)."""
-    return score_scale_disruptor(cfg).score
+    return score_scale_disruptor(cfg, sp500).score
 
 
 # Updated dimensions including Scale Disruptor
@@ -49,5 +49,5 @@ DIMENSIONS = [
 ]
 
 
-def average_score(cfg) -> ScoreResult:
-    return score_with("Composite Average", cfg, DIMENSIONS)
+def average_score(cfg, sp500=None) -> ScoreResult:
+    return score_with("Composite Average", cfg, DIMENSIONS, context=sp500)

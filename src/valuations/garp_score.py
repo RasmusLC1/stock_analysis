@@ -4,7 +4,7 @@ from typing import Optional
 from .scoring import ScoreResult, get, scale, grade
 
 
-def score_garp(cfg) -> ScoreResult:
+def score_garp(cfg, sp500=None) -> ScoreResult:
     """
     GARP (Growth At a Reasonable Price) Score Lens.
     Combines Forward P/E (FPE), Earnings Growth, and PEG Ratio.
@@ -34,18 +34,11 @@ def score_garp(cfg) -> ScoreResult:
         )
 
     # 2. Score individual components (0-100 scale)
-    # Forward P/E: Lower is better (e.g., 10x = 100 score, 40x+ = 0 score)
     fpe_score = scale(fpe, bad=45.0, good=10.0) if fpe is not None else None
-
-    # Growth Rate: Higher is better (e.g., 0% = 0 score, 30%+ = 100 score)
     growth_score = scale(growth, bad=0.0, good=30.0) if growth is not None else None
-
-    # PEG Ratio: Lower is better (e.g., PEG of 0.5 = 100 score, PEG of 3.0+ = 0 score)
-    # Rule of thumb: PEG < 1.0 is undervalued relative to growth, PEG > 2.0 is expensive
     peg_score = scale(peg, bad=3.0, good=0.5) if peg is not None else None
 
     # 3. Handle missing metrics dynamically (renormalize weights)
-    # Base weights: PEG gets highest weight (40%), Growth (35%), FPE (25%)
     weights = {
         "fpe": 0.25,
         "growth": 0.35,

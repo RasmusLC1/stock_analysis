@@ -34,7 +34,7 @@ def parse_market_cap(val) -> Optional[float]:
     return None
 
 
-def score_scale_disruptor(cfg) -> ScoreResult:
+def score_scale_disruptor(cfg, sp500=None) -> ScoreResult:
     """
     Scale Disruptor Score Lens.
     Triggers ONLY for verified small caps (Market Cap < $5B). 
