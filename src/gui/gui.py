@@ -4,7 +4,8 @@ from tkinter import messagebox
 from .score_card import ScoreCard
 from .filtered_results import FilteredResultsPanel  # Import new component
 from src.valuations.lenses import LENSES
-from ..stock_service import StockService
+from src.stock_service import StockService
+from src.calculate_sp.calculate_sp import CalculateSP500
 from .theme import DARK, LIGHT, Theme
 from .widgets import HeaderBar, SearchBar
 from .helper.format import Formatter
@@ -19,6 +20,8 @@ class StockAppGUI:
     self.root.title("Stock Analysis Starter")
     self.root.geometry("500x580")
     self.root.minsize(440, 500)
+
+    self.sp500_values = CalculateSP500()
 
     self.theme: Theme = DARK
     self.current_lens_name = tk.StringVar(value=key.AVERAGE)
@@ -57,6 +60,8 @@ class StockAppGUI:
     self._themed = [self.header, self.search_bar, self.score_card, self.results]
     self.apply_theme()
 
+
+
   def toggle_theme(self):
     self.theme = LIGHT if self.theme is DARK else DARK
     self.apply_theme()
@@ -88,6 +93,8 @@ class StockAppGUI:
     ticker = self.search_bar.get_ticker()
     try:
       self.latest_data = StockService.fetch_stock_summary(ticker)
+      values = self.sp500_values.get_average_values()
+      print(values)
     except Exception as e:
       messagebox.showerror("Error", str(e))
       return
