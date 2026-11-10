@@ -16,17 +16,35 @@ import type { ScoreResult } from "./types/stock";
 import "./App.css";
 
 function App() {
-  // State variables
+  // Theme
   const [darkMode, setDarkMode] = useState(true);
 
+  // Stock information
   const [ticker, setTicker] = useState("AAPL");
   const [stock, setStock] = useState<StockData | null>(null);
 
+  // Loading and error states
   const [loading, setLoading] = useState(false);
+  const [scoreLoading, setScoreLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Score information
   const [score, setScore] = useState<ScoreResult | null>(null);
 
-  // Handle Analyze button
+  // Available scoring lenses
+  const availableLenses = [
+    "Average",
+    "Growth",
+    "Value",
+    "Health",
+    "Quality",
+    "Garp",
+    "Scale Disruptor",
+  ];
+
+  const [activeLens, setActiveLens] = useState("Average");
+
+  // Handle stock analysis
   async function handleAnalyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -38,6 +56,7 @@ function App() {
     }
 
     setLoading(true);
+    setScoreLoading(false);
     setError("");
     setStock(null);
     setScore(null);
@@ -45,7 +64,7 @@ function App() {
     try {
       const [stockResult, scoreResult] = await Promise.all([
         fetchStock(searchTicker),
-        fetchStockScore(searchTicker, "average"),
+        fetchStockScore(searchTicker, activeLens),
       ]);
 
       setStock(stockResult);
@@ -62,7 +81,37 @@ function App() {
     }
   }
 
-  // Format stock data
+  // Handle changing the scoring lens
+  async function handleLensChange(lens: string) {
+    setActiveLens(lens);
+
+    if (!stock) {
+      return;
+    }
+
+    setScoreLoading(true);
+    setError("");
+
+    try {
+      const result = await fetchStockScore(
+        stock.ticker_symbol,
+        lens
+      );
+
+      setScore(result);
+
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to calculate stock score."
+      );
+    } finally {
+      setScoreLoading(false);
+    }
+  }
+
+  // Format stock data for the results panel
   function formatStockData(data: StockData): string {
     const sections: Record<string, string[]> = {
       "COMPANY INFORMATION": [
@@ -158,7 +207,9 @@ function App() {
           .map((field) => {
             const label = field
               .replace(/_/g, " ")
-              .replace(/\b\w/g, (letter) => letter.toUpperCase());
+              .replace(/\b\w/g, (letter) =>
+                letter.toUpperCase()
+              );
 
             return `${label}: ${data[field]}`;
           });
@@ -171,7 +222,6 @@ function App() {
       .join("\n\n");
   }
 
-  // UI
   return (
     <div className={darkMode ? "app dark" : "app light"}>
       <header className="header">
@@ -190,12 +240,18 @@ function App() {
 
         <BackendStatus />
 
-        <form className="search-bar" onSubmit={handleAnalyze}>
+        {/* Stock search */}
+        <form
+          className="search-bar"
+          onSubmit={handleAnalyze}
+        >
           <input
             type="text"
             placeholder="Enter stock ticker (e.g. AAPL)"
             value={ticker}
-            onChange={(event) => setTicker(event.target.value)}
+            onChange={(event) =>
+              setTicker(event.target.value)
+            }
           />
 
           <button type="submit" disabled={loading}>
@@ -203,18 +259,42 @@ function App() {
           </button>
         </form>
 
+        {/* Lens selector */}
+        <div className="lens-selector">
+          <label htmlFor="lens-select">
+            Active Lens:
+          </label>
+
+          <select
+            id="lens-select"
+            value={activeLens}
+            onChange={(event) =>
+              handleLensChange(event.target.value)
+            }
+          >
+            {availableLenses.map((lens) => (
+              <option key={lens} value={lens}>
+                {lens}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Error message */}
         {error && (
           <div className="error-message">
             {error}
           </div>
         )}
 
+        {/* Loading message */}
         {loading && (
           <p className="loading-message">
             Retrieving stock information...
           </p>
         )}
 
+        {/* Stock results */}
         {stock && (
           <>
             <section className="stock-header">
@@ -224,29 +304,39 @@ function App() {
 
               <p>
                 {stock.ticker_symbol}
-                {stock.sector ? ` · ${stock.sector}` : ""}
-                {stock.currency ? ` · ${stock.currency}` : ""}
+                {stock.sector
+                  ? ` · ${stock.sector}`
+                  : ""}
+                {stock.currency
+                  ? ` · ${stock.currency}`
+                  : ""}
               </p>
 
               <h3>
-                {stock.price ?? "N/A"} {stock.currency ?? ""}
+                {stock.price ?? "N/A"}{" "}
+                {stock.currency ?? ""}
               </h3>
             </section>
 
+            {/* Scoring results */}
             <ScoreCard
-              title="Stock Score"
+              title={`${activeLens} Lens Score`}
               result={score}
+              isLoading={scoreLoading}
             />
 
+            {/* Full stock information */}
             <FilteredResultsPanel
               text={formatStockData(stock)}
             />
           </>
         )}
 
+        {/* Welcome screen */}
         {!stock && !loading && !error && (
           <div className="welcome-message">
             <h3>Welcome to Stock Analysis</h3>
+
             <p>
               Enter a stock ticker above to retrieve
               financial information from your Python backend.

@@ -4,6 +4,7 @@ import type { ScoreResult } from "../types/stock";
 interface ScoreCardProps {
   title: string;
   result: ScoreResult | null;
+  isLoading?: boolean;
 }
 
 const GRADE_COLORS: Record<string, { bg: string; fg: string }> = {
@@ -38,21 +39,31 @@ const LOW_COVERAGE = 0.6;
 export default function ScoreCard({
   title,
   result,
+  isLoading = false,
 }: ScoreCardProps) {
+  // Determine grade and corresponding colors
   const grade = result?.grade ?? "N/A";
   const colors = GRADE_COLORS[grade] ?? GRADE_COLORS["N/A"];
 
+  // Format overall score
   const scoreText =
     result?.score == null ? "--" : result.score.toFixed(0);
 
+  // Safely calculate coverage
   const coverage = result?.coverage ?? 0;
+  const coveragePercentage = Math.max(
+    0,
+    Math.min(100, coverage * 100)
+  );
 
+  // Get individual scoring categories
   const breakdown = result
     ? Object.entries(result.breakdown)
     : [];
 
   return (
     <section className="score-card">
+
       {/* Score badge */}
       <div
         className="score-badge"
@@ -61,22 +72,40 @@ export default function ScoreCard({
           color: colors.fg,
         }}
       >
-        <span className="score-number">{scoreText}</span>
+        <span className="score-number">
+          {isLoading ? "..." : scoreText}
+        </span>
 
         <span className="score-grade">
-          {result ? `Grade ${grade}` : "No data"}
+          {isLoading
+            ? "Loading"
+            : result
+              ? `Grade ${grade}`
+              : "No data"}
         </span>
       </div>
 
       {/* Score information */}
       <div className="score-content">
+
         <h3>{title}</h3>
 
-        {!result ? (
+        {/* Loading state */}
+        {isLoading ? (
+          <p className="score-empty">
+            Calculating score...
+          </p>
+
+        ) : !result ? (
+
+          /* Empty state */
           <p className="score-empty">
             Search for a ticker to evaluate.
           </p>
+
         ) : (
+
+          /* Score details */
           <>
             {/* Individual scoring categories */}
             <div className="score-breakdown">
@@ -93,11 +122,14 @@ export default function ScoreCard({
               ))}
             </div>
 
-            {/* Coverage */}
+            {/* Data coverage */}
             <div className="score-coverage">
+
               <div className="coverage-header">
                 <span>Data coverage</span>
-                <strong>{(coverage * 100).toFixed(0)}%</strong>
+                <strong>
+                  {coveragePercentage.toFixed(0)}%
+                </strong>
               </div>
 
               <div className="coverage-track">
@@ -106,7 +138,7 @@ export default function ScoreCard({
                     coverage < LOW_COVERAGE ? "low" : ""
                   }`}
                   style={{
-                    width: `${Math.max(0, Math.min(100, coverage * 100))}%`,
+                    width: `${coveragePercentage}%`,
                   }}
                 />
               </div>
@@ -116,16 +148,21 @@ export default function ScoreCard({
                   ⚠ Low data coverage - treat with caution
                 </p>
               )}
+
             </div>
 
-            {/* Lens notes */}
-            {result.notes.length > 0 && (
+            {/* Scoring notes */}
+            {result.notes?.length > 0 && (
               <div className="score-notes">
-                ⚡ {result.notes[0]}
+                ⚡ {result.notes.map((note, index) => (
+                  <p key={index}>{note}</p>
+                ))}
               </div>
             )}
+
           </>
         )}
+
       </div>
     </section>
   );
