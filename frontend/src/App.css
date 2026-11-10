@@ -303,4 +303,46 @@
   font-family: inherit;
 }
 
+.search-bar button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+  background: rgba(220, 38, 38, 0.12);
+  color: #ef4444;
+}
+
+.loading-message {
+  opacity: 0.7;
+  margin: 20px 0;
+}
+
+.welcome-message {
+  text-align: center;
+  padding: 40px 20px;
+  opacity: 0.7;
+}
+
+.stock-header {
+  margin: 24px 0;
+}
+
+.stock-header h2 {
+  margin-bottom: 4px;
+}
+
+.stock-header p {
+  opacity: 0.7;
+}
+
+.stock-header h3 {
+  font-size: 1.8rem;
+  margin-top: 16px;
+}
+
+
 }
