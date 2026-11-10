@@ -14,10 +14,10 @@ import pandas as pd
 import yfinance as yf
 
 from tickers import TICKERS_100, ADDITIONAL_TICKERS_100
-from src.stock_service import StockService
-from src.caching.cache import Cache  # Import your SQLite Cache class
-from src.valuations.lenses import LENSES
-from src.valuations.average_score import average_score
+from backend.src.stock_service import StockService
+from backend.src.caching.cache import Cache  # Import your SQLite Cache class
+from backend.src.valuations.lenses import LENSES
+from backend.src.valuations.average_score import average_score
 
 YEARS = 20
 

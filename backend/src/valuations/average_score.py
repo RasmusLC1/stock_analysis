@@ -9,7 +9,7 @@ from .garp_score import score_garp
 from .scale_disruptor_score import score_scale_disruptor  # Imported new scale disruptor lens
 from .scoring import ScoreResult, score_with
 from .dimension import Dimension
-from src.helper.lens_keys import LensKeys as key
+from backend.src.helper.lens_keys import LensKeys as key
 
 
 # Individual dimension getters accepting sp500 context

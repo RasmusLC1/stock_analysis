@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 from .scoring import ScoreResult, avg, get, scale, score_with
 from .dimension import Dimension
-from src.helper.lens_keys import LensKeys as key
+from backend.src.helper.lens_keys import LensKeys as key
 
 def score_balance_sheet(cfg, sp500=None) -> Optional[float]:
     de, cr = get(cfg, "debt_to_equity"), get(cfg, "current_ratio")

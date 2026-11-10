@@ -1,6 +1,6 @@
 from dataclasses import fields
 from statistics import mean
-from src.info.info_config import InfoConfig
+from backend.src.info.info_config import InfoConfig
 
 
 class CalculateAverages:

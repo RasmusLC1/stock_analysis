@@ -4,7 +4,7 @@ from typing import Optional
 
 from .scoring import ScoreResult, avg, get, scale, score_with
 from .dimension import Dimension
-from src.helper.lens_keys import LensKeys as key
+from backend.src.helper.lens_keys import LensKeys as key
 
 def score_profit_margins(cfg, sp500=None) -> Optional[float]:
     """Gross and Operating margins evaluated against market benchmarks."""

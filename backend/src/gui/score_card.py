@@ -1,6 +1,6 @@
 import tkinter as tk
 from typing import Optional
-from src.valuations.scoring import ScoreResult
+from backend.src.valuations.scoring import ScoreResult
 from .theme import GRADE_COLORS, Theme
 
 LOW_COVERAGE = 0.6

@@ -1,6 +1,6 @@
 from .info_config import InfoConfig
 from .market_cap_formatter import MarketCapFormatter
-from src.helper.yf_keys import YahooFinanceKeys as key
+from backend.src.helper.yf_keys import YahooFinanceKeys as key
 
 
 class ExtractInfo:

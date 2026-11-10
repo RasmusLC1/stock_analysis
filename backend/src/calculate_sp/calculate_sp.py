@@ -1,10 +1,10 @@
 from .extract_tickers import ExtractTickers
-from src.helper.process_data import ProcessData
+from backend.src.helper.process_data import ProcessData
 from .calculate_averages import CalculateAverages
-from src.caching.cache import Cache
-from src.info.extract_info import ExtractInfo
+from backend.src.caching.cache import Cache
+from backend.src.info.extract_info import ExtractInfo
 from datetime import datetime
-from src.info.info_config import InfoConfig
+from backend.src.info.info_config import InfoConfig
 
 
 

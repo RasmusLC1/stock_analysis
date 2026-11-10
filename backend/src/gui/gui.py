@@ -3,13 +3,13 @@ from tkinter import messagebox
 
 from .score_card import ScoreCard
 from .filtered_results import FilteredResultsPanel  # Import new component
-from src.valuations.lenses import LENSES
-from src.stock_service import StockService
-from src.calculate_sp.calculate_sp import CalculateSP500
+from backend.src.valuations.lenses import LENSES
+from backend.src.stock_service import StockService
+from backend.src.calculate_sp.calculate_sp import CalculateSP500
 from .theme import DARK, LIGHT, Theme
 from .widgets import HeaderBar, SearchBar
 from .helper.format import Formatter
-from src.helper.lens_keys import LensKeys as key
+from backend.src.helper.lens_keys import LensKeys as key
 
 
 class StockAppGUI:

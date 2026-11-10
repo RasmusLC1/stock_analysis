@@ -6,7 +6,7 @@ import pandas as pd
 import yfinance as yf
 from datetime import datetime, timedelta
 
-from src.stock_service import StockService
+from backend.src.stock_service import StockService
 
 # Define local cache directory relative to project root
 CACHE_DIR = Path(__file__).resolve().parent.parent.parent / "data_cache"

@@ -1,7 +1,7 @@
-from src.helper.validate_stock_info import ValidateStockInfo
-from src.yf_api.api_fetch import ApiFetch
-from src.info.extract_info import ExtractInfo
-from src.info.info_config import InfoConfig
+from backend.src.helper.validate_stock_info import ValidateStockInfo
+from backend.src.yf_api.api_fetch import ApiFetch
+from backend.src.info.extract_info import ExtractInfo
+from backend.src.info.info_config import InfoConfig
 from yfinance import Ticker
 
 class ProcessData:

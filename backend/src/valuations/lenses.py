@@ -7,7 +7,7 @@ from .average_score import average_score
 from .garp_score import score_garp
 from .scale_disruptor_score import score_scale_disruptor
 from .scoring import ScoreResult
-from src.helper.lens_keys import LensKeys as key
+from backend.src.helper.lens_keys import LensKeys as key
 from typing import Callable, Optional
 
 LENSES: dict[str, Callable[[object, Optional[object]], ScoreResult]] = {
