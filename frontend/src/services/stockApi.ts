@@ -1,4 +1,7 @@
 
+import type { ScoreResult } from "../types/stock";
+
+// Stock information returned by Python
 export interface StockData {
   ticker_symbol: string;
   name?: string | null;
@@ -19,7 +22,10 @@ export interface StockData {
   [key: string]: string | number | null | undefined;
 }
 
-export async function fetchStock(ticker: string): Promise<StockData> {
+// Retrieve stock information
+export async function fetchStock(
+  ticker: string
+): Promise<StockData> {
   const response = await fetch(
     `/api/stocks/${encodeURIComponent(ticker)}`
   );
@@ -27,6 +33,25 @@ export async function fetchStock(ticker: string): Promise<StockData> {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.detail || "Failed to retrieve stock");
+  }
+
+  return response.json();
+}
+
+// Retrieve calculated stock score
+export async function fetchStockScore(
+  ticker: string,
+  lens: string = "average"
+): Promise<ScoreResult> {
+  const response = await fetch(
+    `/api/stocks/${encodeURIComponent(ticker)}/score?lens=${encodeURIComponent(lens)}`
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(
+      error.detail || "Failed to calculate stock score"
+    );
   }
 
   return response.json();

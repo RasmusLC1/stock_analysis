@@ -33,6 +33,8 @@ const LABELS: Record<string, string> = {
   Upside: "Upside",
 };
 
+const LOW_COVERAGE = 0.6;
+
 export default function ScoreCard({
   title,
   result,
@@ -43,28 +45,15 @@ export default function ScoreCard({
   const scoreText =
     result?.score == null ? "--" : result.score.toFixed(0);
 
+  const coverage = result?.coverage ?? 0;
+
   const breakdown = result
     ? Object.entries(result.breakdown)
-        .map(([key, value]) =>
-          `${LABELS[key] ?? key} ${value == null ? "-" : value.toFixed(0)}`
-        )
-        .join("  ·  ")
-    : "";
-
-  const detail = !result
-    ? "Search for a ticker to evaluate."
-    : [
-        breakdown,
-        result.coverage < 0.6
-          ? `⚠ Low data coverage (${(result.coverage * 100).toFixed(0)}%) - treat with caution`
-          : `Data coverage ${(result.coverage * 100).toFixed(0)}%`,
-        result.notes.length > 0 ? `⚡ ${result.notes[0]}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n");
+    : [];
 
   return (
     <section className="score-card">
+      {/* Score badge */}
       <div
         className="score-badge"
         style={{
@@ -73,14 +62,70 @@ export default function ScoreCard({
         }}
       >
         <span className="score-number">{scoreText}</span>
+
         <span className="score-grade">
           {result ? `Grade ${grade}` : "No data"}
         </span>
       </div>
 
+      {/* Score information */}
       <div className="score-content">
         <h3>{title}</h3>
-        <p className="score-detail">{detail}</p>
+
+        {!result ? (
+          <p className="score-empty">
+            Search for a ticker to evaluate.
+          </p>
+        ) : (
+          <>
+            {/* Individual scoring categories */}
+            <div className="score-breakdown">
+              {breakdown.map(([key, value]) => (
+                <div className="score-metric" key={key}>
+                  <span className="metric-label">
+                    {LABELS[key] ?? key}
+                  </span>
+
+                  <span className="metric-value">
+                    {value == null ? "--" : value.toFixed(0)}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Coverage */}
+            <div className="score-coverage">
+              <div className="coverage-header">
+                <span>Data coverage</span>
+                <strong>{(coverage * 100).toFixed(0)}%</strong>
+              </div>
+
+              <div className="coverage-track">
+                <div
+                  className={`coverage-fill ${
+                    coverage < LOW_COVERAGE ? "low" : ""
+                  }`}
+                  style={{
+                    width: `${Math.max(0, Math.min(100, coverage * 100))}%`,
+                  }}
+                />
+              </div>
+
+              {coverage < LOW_COVERAGE && (
+                <p className="coverage-warning">
+                  ⚠ Low data coverage - treat with caution
+                </p>
+              )}
+            </div>
+
+            {/* Lens notes */}
+            {result.notes.length > 0 && (
+              <div className="score-notes">
+                ⚡ {result.notes[0]}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </section>
   );

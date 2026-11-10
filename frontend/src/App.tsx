@@ -5,12 +5,18 @@ import ScoreCard from "./components/ScoreCard";
 import FilteredResultsPanel from "./components/FilteredResultsPanel";
 import BackendStatus from "./components/BackendStatus";
 
-import { fetchStock } from "./services/stockApi";
+import {
+  fetchStock,
+  fetchStockScore,
+} from "./services/stockApi";
+
 import type { StockData } from "./services/stockApi";
+import type { ScoreResult } from "./types/stock";
 
 import "./App.css";
 
 function App() {
+  // State variables
   const [darkMode, setDarkMode] = useState(true);
 
   const [ticker, setTicker] = useState("AAPL");
@@ -18,7 +24,9 @@ function App() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [score, setScore] = useState<ScoreResult | null>(null);
 
+  // Handle Analyze button
   async function handleAnalyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -32,10 +40,17 @@ function App() {
     setLoading(true);
     setError("");
     setStock(null);
+    setScore(null);
 
     try {
-      const result = await fetchStock(searchTicker);
-      setStock(result);
+      const [stockResult, scoreResult] = await Promise.all([
+        fetchStock(searchTicker),
+        fetchStockScore(searchTicker, "average"),
+      ]);
+
+      setStock(stockResult);
+      setScore(scoreResult);
+
     } catch (err) {
       setError(
         err instanceof Error
@@ -47,6 +62,7 @@ function App() {
     }
   }
 
+  // Format stock data
   function formatStockData(data: StockData): string {
     const sections: Record<string, string[]> = {
       "COMPANY INFORMATION": [
@@ -134,7 +150,11 @@ function App() {
     return Object.entries(sections)
       .map(([section, fields]) => {
         const lines = fields
-          .filter((field) => data[field] !== null && data[field] !== undefined)
+          .filter(
+            (field) =>
+              data[field] !== null &&
+              data[field] !== undefined
+          )
           .map((field) => {
             const label = field
               .replace(/_/g, " ")
@@ -151,6 +171,7 @@ function App() {
       .join("\n\n");
   }
 
+  // UI
   return (
     <div className={darkMode ? "app dark" : "app light"}>
       <header className="header">
@@ -214,7 +235,7 @@ function App() {
 
             <ScoreCard
               title="Stock Score"
-              result={null}
+              result={score}
             />
 
             <FilteredResultsPanel
