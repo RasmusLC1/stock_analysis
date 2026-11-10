@@ -10,9 +10,9 @@ if str(ROOT_DIR) not in sys.path:
 import pandas as pd
 
 from tickers import TICKERS_100, ADDITIONAL_TICKERS_100
-from src.stock_service import StockService
-from src.valuations.lenses import LENSES
-from src.valuations.average_score import average_score
+from backend.src.stock_service import StockService
+from backend.src.valuations.lenses import LENSES
+from backend.src.valuations.average_score import average_score
 
 AMOUNT = 100
 

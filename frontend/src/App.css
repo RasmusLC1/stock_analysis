@@ -1,0 +1,388 @@
+
+/* =========================
+   Theme variables
+========================= */
+
+.app {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-hover: #273449;
+  --border: #334155;
+  --fg: #e2e8f0;
+  --muted-fg: #94a3b8;
+  --accent: #60a5fa;
+  --accent-bg: rgba(96, 165, 250, 0.12);
+  --success: #34d399;
+  --danger: #f87171;
+
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background 0.2s, color 0.2s;
+}
+
+.app.light {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --border: #cbd5e1;
+  --fg: #1e293b;
+  --muted-fg: #64748b;
+  --accent: #2563eb;
+  --accent-bg: rgba(37, 99, 235, 0.1);
+  --success: #059669;
+  --danger: #dc2626;
+}
+
+/* =========================
+   Main layout
+========================= */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 5%;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.dashboard {
+  width: min(1200px, calc(100% - 40px));
+  margin: 32px auto;
+}
+
+.dashboard > h2 {
+  margin: 0 0 20px;
+  font-size: 24px;
+}
+
+/* =========================
+   Buttons and inputs
+========================= */
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.theme-button {
+  padding: 9px 14px;
+  color: var(--fg);
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.theme-button:hover {
+  background: var(--border);
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.search-bar input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+}
+
+.search-bar input:focus {
+  border-color: var(--accent);
+}
+
+.search-bar button {
+  padding: 12px 22px;
+  color: white;
+  background: #2563eb;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.search-bar button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.search-bar button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Backend status
+========================= */
+
+.backend-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  color: var(--success);
+  background: var(--accent-bg);
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+/* =========================
+   Stock header
+========================= */
+
+.stock-header {
+  padding: 24px;
+  margin: 24px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.stock-header h2 {
+  margin: 0 0 6px;
+  font-size: 25px;
+}
+
+.stock-header p {
+  margin: 0;
+  color: var(--muted-fg);
+}
+
+.stock-header h3 {
+  margin: 20px 0 0;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* =========================
+   Score card
+========================= */
+
+.score-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  margin: 24px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  min-height: 96px;
+}
+
+.score-badge {
+  width: 110px;
+  height: 70px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-number {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.score-grade {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.score-content {
+  min-width: 0;
+}
+
+.score-content h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.score-detail {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted-fg);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+
+/* =========================
+   Financial results panel
+========================= */
+
+.results-panel {
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 300px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--surface-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-bar label {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.filter-bar input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  outline: none;
+}
+
+.filter-bar input:focus {
+  border-color: var(--accent);
+}
+
+.clear-filter {
+  border: none;
+  background: transparent;
+  color: var(--muted-fg);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.results-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  color: var(--fg);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.result-line {
+  min-height: 20px;
+}
+
+.empty-results {
+  color: var(--muted-fg);
+  font-family: inherit;
+}
+
+/* =========================
+   Loading and errors
+========================= */
+
+.error-message {
+  padding: 14px 16px;
+  margin: 16px 0;
+  color: var(--danger);
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: 8px;
+}
+
+.loading-message {
+  color: var(--muted-fg);
+  margin: 20px 0;
+}
+
+.welcome-message {
+  padding: 50px 20px;
+  color: var(--muted-fg);
+  text-align: center;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
+
+.welcome-message h3 {
+  color: var(--fg);
+  margin-top: 0;
+}
+
+/* =========================
+   Responsive layout
+========================= */
+
+@media (max-width: 650px) {
+  .header {
+    padding: 16px 20px;
+  }
+
+  .header h1 {
+    font-size: 21px;
+  }
+
+  .dashboard {
+    width: calc(100% - 24px);
+    margin: 20px auto;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar button {
+    width: 100%;
+  }
+
+  .stock-header {
+    padding: 18px;
+  }
+
+  .score-card {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .score-badge {
+    width: 80px;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .filter-bar input {
+    flex-basis: 100%;
+  }
+
+  .results-content {
+    padding: 14px;
+    font-size: 12px;
+  }
+}
