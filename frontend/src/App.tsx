@@ -27,8 +27,10 @@ function App() {
       <main className="dashboard">
         <h2>Stock Overview</h2>
 
-        <BackendStatus />
-        <ClearCacheButton />
+        <div className="status-row">
+          <BackendStatus />
+          <ClearCacheButton />
+        </div>
 
         <SearchBar
           ticker={s.ticker}

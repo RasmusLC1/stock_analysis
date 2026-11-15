@@ -8,9 +8,6 @@ function Header({ darkMode, onToggle }: HeaderProps) {
     <header className="header">
       <h1>Stock Analysis</h1>
 
-      <button onClick={onToggle} className="theme-button">
-        {darkMode ? "☀ Light mode" : "☾ Dark mode"}
-      </button>
     </header>
   );
 }

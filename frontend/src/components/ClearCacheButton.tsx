@@ -3,21 +3,26 @@ import { clearCache } from "../services/stockApi";
 
 function ClearCacheButton() {
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("");
+  const [result, setResult] = useState<{ text: string; isError: boolean } | null>(null);
 
   async function handleClick() {
     setBusy(true);
-    setMessage("");
+    setResult(null);
 
     try {
       const removed = await clearCache();
-      setMessage(
-        removed === null
-          ? "Cache cleared."
-          : `Cleared ${removed} old cache ${removed === 1 ? "entry" : "entries"}.`
-      );
+      setResult({
+        text:
+          removed === null
+            ? "Cache cleared"
+            : `Cleared ${removed} old ${removed === 1 ? "entry" : "entries"}`,
+        isError: false,
+      });
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Failed to clear cache.");
+      setResult({
+        text: err instanceof Error ? err.message : "Failed to clear cache",
+        isError: true,
+      });
     } finally {
       setBusy(false);
     }
@@ -28,7 +33,12 @@ function ClearCacheButton() {
       <button onClick={handleClick} disabled={busy}>
         {busy ? "Clearing..." : "Clear old cache"}
       </button>
-      {message && <span>{message}</span>}
+
+      {result && (
+        <span className={result.isError ? "clear-cache-message error" : "clear-cache-message"}>
+          {result.text}
+        </span>
+      )}
     </div>
   );
 }
