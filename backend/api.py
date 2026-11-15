@@ -1,5 +1,6 @@
-
 from dataclasses import asdict, is_dataclass
+from contextlib import asynccontextmanager
+from datetime import date
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,9 +8,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.src.stock_service import StockService
 from backend.src.valuations.lenses import LENSES
 from backend.src.caching.cache import Cache
-from datetime import date
+from backend.src.valuations.benchmark import get_sp500_benchmark
 
-app = FastAPI(title="Stock Analysis API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    get_sp500_benchmark()  # kick off the background load at startup
+    yield
+
+
+app = FastAPI(title="Stock Analysis API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -58,17 +66,14 @@ def get_stock(ticker: str):
 @app.get("/api/cache/clear_cache")
 def clear_cache():
     try:
-        Cache.clear_stale_cache()
-    except HTTPException:
-            raise
-    
+        removed = Cache.clear_stale_cache()
+        return {"removed": removed}
     except Exception as error:
         print(f"Clearing cache failed: {error}")
         raise HTTPException(
             status_code=500,
             detail="An error occurred while clearing the cache"
         )
-
 
 @app.get("/api/stocks/{ticker}/score")
 def get_stock_score(ticker: str, lens: str = "Average"):
@@ -94,7 +99,8 @@ def get_stock_score(ticker: str, lens: str = "Average"):
                 detail=f"No stock data found for {ticker.upper()}"
             )
 
-        result = LENSES[lens](stock, None)
+        benchmark = get_sp500_benchmark()
+        result = LENSES[lens](stock, benchmark)
 
         return {
             "score": result.score,
@@ -102,6 +108,7 @@ def get_stock_score(ticker: str, lens: str = "Average"):
             "breakdown": result.breakdown,
             "coverage": result.coverage,
             "notes": result.notes,
+            "benchmark_used": benchmark is not None,
         }
 
     except HTTPException:
@@ -113,3 +120,5 @@ def get_stock_score(ticker: str, lens: str = "Average"):
             status_code=500,
             detail="An error occurred while calculating the stock score."
         )
+
+
