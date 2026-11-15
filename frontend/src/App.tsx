@@ -8,6 +8,7 @@ import WelcomeMessage from "./components/WelcomeMessage";
 import ScoreCard from "./components/ScoreCard";
 import FilteredResultsPanel from "./components/FilteredResultsPanel";
 import BackendStatus from "./components/BackendStatus";
+import ClearCacheButton from "./components/ClearCacheButton";
 
 import { useStockAnalysis } from "./hooks/useStockAnalysis";
 import { formatStockData } from "./utils/formatStockData";
@@ -27,6 +28,7 @@ function App() {
         <h2>Stock Overview</h2>
 
         <BackendStatus />
+        <ClearCacheButton />
 
         <SearchBar
           ticker={s.ticker}
