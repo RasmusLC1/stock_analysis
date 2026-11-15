@@ -5,6 +5,7 @@ import sqlite3
 import pickle
 import pandas as pd
 from ..info.info_config import InfoConfig
+from datetime import date 
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / "data_cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -19,6 +20,7 @@ class Cache:
             CREATE TABLE IF NOT EXISTS summaries (
                 ticker TEXT,
                 period TEXT,
+                insertDate TEXT,
                 data BLOB,
                 PRIMARY KEY (ticker, period)
             )
@@ -27,6 +29,7 @@ class Cache:
             CREATE TABLE IF NOT EXISTS price_history (
                 ticker TEXT,
                 years INT,
+                insertDate TEXT,
                 data BLOB,
                 PRIMARY KEY (ticker, years)
             )
@@ -55,8 +58,8 @@ class Cache:
             blob = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
             with Cache._get_connection() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO summaries (ticker, period, data) VALUES (?, ?, ?)",
-                    (ticker_symbol, period, sqlite3.Binary(blob))
+                    "INSERT OR REPLACE INTO summaries (ticker, period, insertDate, data) VALUES (?, ?, ?, ?)",
+                    (ticker_symbol, period, date.today().isoformat(), sqlite3.Binary(blob)),
                 )
         except Exception as e:
             print(f"Warning: Could not save summary cache for {ticker_symbol}: {e}")
@@ -85,8 +88,27 @@ class Cache:
             blob = pickle.dumps(df, protocol=pickle.HIGHEST_PROTOCOL)
             with Cache._get_connection() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO price_history (ticker, years, data) VALUES (?, ?, ?)",
-                    (ticker_symbol, years, sqlite3.Binary(blob))
+                    "INSERT OR REPLACE INTO price_history (ticker, years, insertDate, data) VALUES (?, ?, ?, ?)",
+                    (ticker_symbol, years, date.today().isoformat(), sqlite3.Binary(blob)),
                 )
         except Exception as e:
             print(f"Warning: Could not save price history cache for {ticker_symbol}: {e}")
+
+    @staticmethod
+    def clear_stale_cache(keep_ticker: str = "S&P500") -> int:
+        today = date.today().isoformat()
+        removed = 0
+
+        with Cache._get_connection() as conn:
+            for table in ("summaries", "price_history"):
+                cursor = conn.execute(
+                    f"""
+                    DELETE FROM {table}
+                    WHERE (insertDate IS NULL OR insertDate != ?)
+                    AND ticker != ?
+                    """,
+                    (today, keep_ticker),
+                )
+                removed += cursor.rowcount
+
+        return removed

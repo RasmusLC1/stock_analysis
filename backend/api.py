@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.src.stock_service import StockService
 from backend.src.valuations.lenses import LENSES
+from backend.src.caching.cache import Cache
+from datetime import date
 
 app = FastAPI(title="Stock Analysis API")
 
@@ -27,6 +29,7 @@ def health_check():
 @app.get("/api/stocks/{ticker}")
 def get_stock(ticker: str):
     try:
+        print(date.today())
         stock = StockService.fetch_stock_summary(ticker)
 
         if stock is None:
@@ -52,7 +55,19 @@ def get_stock(ticker: str):
             detail="An error occurred while retrieving stock data."
         )
 
-
+@app.get("/api/cache/clear_cache")
+def clear_cache():
+    try:
+        Cache.clear_stale_cache()
+    except HTTPException:
+            raise
+    
+    except Exception as error:
+        print(f"Clearing cache failed: {error}")
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while clearing the cache"
+        )
 
 
 @app.get("/api/stocks/{ticker}/score")

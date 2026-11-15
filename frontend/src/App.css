@@ -144,6 +144,52 @@ button {
 }
 
 /* =========================
+   Status row and cache button
+========================= */
+
+.status-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.clear-cache {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.clear-cache button {
+  padding: 6px 14px;
+  font-size: 13px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.clear-cache button:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.clear-cache button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.clear-cache-message {
+  font-size: 13px;
+  color: var(--success);
+}
+
+.clear-cache-message.error {
+  color: var(--danger);
+}
+
+/* =========================
    Stock header
 ========================= */
 
