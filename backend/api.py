@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.src.stock_service import StockService
 from backend.src.valuations.lenses import LENSES
+from datetime import date
 
 app = FastAPI(title="Stock Analysis API")
 
@@ -27,7 +28,8 @@ def health_check():
 @app.get("/api/stocks/{ticker}")
 def get_stock(ticker: str):
     try:
-        stock = StockService.fetch_stock_summary(ticker)
+        print(date.today())
+        stock = StockService.fetch_stock_summary(ticker, date.today())
 
         if stock is None:
             raise HTTPException(

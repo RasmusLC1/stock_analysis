@@ -43,6 +43,7 @@ class Cache:
                     (ticker_symbol, period)
                 )
                 row = cursor.fetchone()
+                print("ROW FOUND", ticker_symbol, period)
                 if row:
                     return pickle.loads(row[0])
         except Exception as e:
@@ -90,3 +91,6 @@ class Cache:
                 )
         except Exception as e:
             print(f"Warning: Could not save price history cache for {ticker_symbol}: {e}")
+
+    @staticmethod
+    def Clear_Cache():
