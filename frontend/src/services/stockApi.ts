@@ -56,3 +56,15 @@ export async function fetchStockScore(
 
   return response.json();
 }
+
+export async function clearCache(): Promise<number | null> {
+  const response = await fetch("/api/cache/clear_cache");
+
+  if (!response.ok) {
+    throw new Error(`Failed to clear cache (${response.status}).`);
+  }
+
+  // Assumes your endpoint returns something like { "removed": 12 }
+  const data = await response.json().catch(() => null);
+  return data?.removed ?? null;
+}

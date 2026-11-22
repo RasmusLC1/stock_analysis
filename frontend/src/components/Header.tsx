@@ -1,26 +1,18 @@
-
 interface HeaderProps {
   darkMode: boolean;
-  onToggleTheme: () => void;
+  onToggle: () => void;
 }
 
-export default function Header({
-  darkMode,
-  onToggleTheme,
-}: HeaderProps) {
+function Header({ darkMode, onToggle }: HeaderProps) {
   return (
     <header className="header">
-      <div className="brand">
-        <div className="brand-icon">S</div>
-        <h1>Stock Analysis</h1>
-      </div>
+      <h1>Stock Analysis</h1>
 
-      <button
-        className="theme-button"
-        onClick={onToggleTheme}
-      >
+      <button onClick={onToggle} className="theme-button">
         {darkMode ? "☀ Light mode" : "☾ Dark mode"}
       </button>
     </header>
   );
 }
+
+export default Header;

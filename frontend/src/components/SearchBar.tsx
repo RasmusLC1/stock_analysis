@@ -1,31 +1,32 @@
+import type { FormEvent } from "react";
 
 interface SearchBarProps {
   ticker: string;
-  setTicker: (value: string) => void;
-  onSearch: () => void;
   loading: boolean;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
 }
 
-export default function SearchBar({
-  ticker,
-  setTicker,
-  onSearch,
-  loading,
-}: SearchBarProps) {
+function SearchBar({ ticker, loading, onChange, onSubmit }: SearchBarProps) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onSubmit();
+  }
+
   return (
-    <div className="search-bar">
+    <form className="search-bar" onSubmit={handleSubmit}>
       <input
-        value={ticker}
-        onChange={(e) => setTicker(e.target.value.toUpperCase())}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") onSearch();
-        }}
+        type="text"
         placeholder="Enter stock ticker (e.g. AAPL)"
+        value={ticker}
+        onChange={(event) => onChange(event.target.value)}
       />
 
-      <button onClick={onSearch} disabled={loading}>
-        {loading ? "Loading..." : "Analyze"}
+      <button type="submit" disabled={loading}>
+        {loading ? "Analyzing..." : "Analyze"}
       </button>
-    </div>
+    </form>
   );
 }
+
+export default SearchBar;

@@ -4,7 +4,6 @@ from .calculate_averages import CalculateAverages
 from backend.src.caching.cache import Cache
 from backend.src.info.extract_info import ExtractInfo
 from datetime import datetime
-from backend.src.info.info_config import InfoConfig
 
 
 
@@ -34,13 +33,14 @@ class CalculateSP500:
         data_list = CalculateSP500._extract_ticker_data(tickers)
         average_values = CalculateAverages.calculate_averages(data_list)
         self.average_values = ExtractInfo.extract_info(average_values, TICKER)
-        Cache.store_cache(TICKER, current_month_year, self.average_info_config)
+        Cache.store_cache(TICKER, current_month_year, self.average_values)
     
     @staticmethod
     def _extract_ticker_data(tickers):
         data_list = []
         for ticker_symbol in tickers:
             data = ProcessData.process_data(ticker_symbol)
+            print(f"""processed: {ticker_symbol}""")
             if not data:
                 continue
             data_list.append(data)
