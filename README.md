@@ -61,60 +61,33 @@ The `tests/` directory contains scripts used to validate historical performance,
 - **`tickers.py`**: Maintains the global watchlist (~200+ tickers spanning US and international exchanges).
 
 ## Project Structure
-
-```text
+```
 stock_analysis/
 ├── backend/
-│   └── api.py
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── types/
-│   │   ├── utils/
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   └── package.json
+│   └── api.py                  # REST API that serves scores to the frontend
+├── frontend/                   # React + TypeScript (Vite)
+│   └── src/
+│       ├── components/         # UI: screener table, cards, filters
+│       ├── hooks/              # Data-fetching and state hooks
+│       ├── services/           # API client
+│       └── types/              # Shared TypeScript types
 ├── src/
-│   ├── caching/
-│   │   └── cache.py
-│   ├── data_cache/          # Local SQLite cache (git-ignored)
-│   ├── helper/
-│   │   ├── lens_keys.py
-│   │   ├── process_data.py
-│   │   ├── validate_stock_info.py
-│   │   └── yf_keys.py
-│   ├── info/
-│   │   ├── extract_info.py
-│   │   ├── info_config.py
-│   │   └── market_cap_formatter.py
-│   ├── valuations/
-│   │   ├── average_score.py
-│   │   ├── benchmark.py
-│   │   ├── dimension.py
-│   │   ├── garp_score.py
+│   ├── yf_api/                 # Yahoo Finance data retrieval (yfinance)
+│   ├── caching/                # SQLite cache for fetched financial summaries
+│   ├── info/                   # Extraction and normalisation of raw company data
+│   ├── helper/                 # Metric keys, validation, data processing
+│   ├── valuations/             # Scoring engine
 │   │   ├── growth_score.py
-│   │   ├── health_score.py
-│   │   ├── lenses.py
 │   │   ├── quality_score.py
+│   │   ├── health_score.py
+│   │   ├── value_score.py
+│   │   ├── garp_score.py
 │   │   ├── scale_disruptor_score.py
-│   │   ├── scoring.py
-│   │   └── value_score.py
-│   ├── yf_api/
-│   │   └── api_fetch.py
-│   ├── calculate_averages.py
-│   ├── calculate_sp.py
-│   ├── extract_tickers.py
-│   └── stock_service.py
-├── tests/
-│   ├── backtest_lens_scores.py
-│   ├── backtest_performance_analysis.py
-│   ├── backtest_valuation.py
-│   ├── find_highest_scores.py
-│   └── tickers.py
-├── .gitignore
-├── main.py
-├── README.md
+│   │   ├── lenses.py           # Combines the lenses
+│   │   └── scoring.py          # Weighted 0-100 composite score
+│   ├── calculate_averages.py   # Benchmark averages across the ticker universe
+│   └── stock_service.py        # Orchestrates fetch → cache → score
+├── tests/                      # Backtests and scoring checks
+├── main.py                     # Entry point
 └── requirements.txt
+```
